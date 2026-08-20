@@ -3,122 +3,554 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tareas de Educación Física</title>
+<title>Expediente de Verificación — Arbitraje Deportivo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#FFFFFF; --card:#F7F7F7; --ink:#1A1A1A; --ink-soft:#6B6B6B;
-  --mito:#B23A2E; --realidad:#1F7A4D; --realidad-bg:#DCEDE1;
+  --mito:#B23A2E; --mito-bg:#F4E1DD; --realidad:#1F7A4D; --realidad-bg:#DCEDE1;
   --warn:#C98A22; --line:#DADADA; --red:#DC0614;
 }
 *{box-sizing:border-box;}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
-.wrap{max-width:900px;margin:0 auto;padding:30px 20px 80px;}
-.masthead{border-bottom:3px solid var(--red);padding-bottom:16px;margin-bottom:24px;}
-.masthead h1{font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:clamp(28px,6vw,44px);line-height:.95;margin:0;text-transform:uppercase;}
+.brandbar{background:#FFFFFF;border-bottom:3px solid #DC0614;padding:9px 20px;display:flex;align-items:center;}
+.brandbar img{height:26px;display:block;}
+.wrap{max-width:900px;margin:0 auto;padding:26px 20px 80px;}
+.hidden{display:none !important;}
+
+.roleBar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px;}
+.roleBtn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.5px;padding:7px 12px;border:2px solid var(--ink);background:transparent;cursor:pointer;text-transform:uppercase;}
+.roleBtn.on{background:var(--red);color:#fff;border-color:var(--red);}
+
+.masthead{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;}
+.masthead h1{font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:clamp(24px,5.2vw,40px);line-height:.95;margin:0;text-transform:uppercase;}
 .masthead .sub{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);letter-spacing:1px;margin-top:6px;}
+.nameplate{display:flex;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.nameplate label{display:block;color:var(--ink-soft);margin-bottom:4px;letter-spacing:.5px;}
+.nameplate select,.nameplate input{font-family:'JetBrains Mono',monospace;font-size:13px;padding:7px 10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);}
 
-.cursoTabs{display:flex;gap:8px;margin-bottom:24px;}
-.cursoTab{flex:1;font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:20px;letter-spacing:.5px;text-transform:uppercase;padding:14px;border:2px solid var(--ink);background:transparent;cursor:pointer;color:var(--ink);}
-.cursoTab.on{background:var(--red);color:#fff;border-color:var(--red);}
+.progress{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.progress .dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;background:var(--card);}
+.progress .dot.done{background:var(--realidad);border-color:var(--realidad);color:#fff;}
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+.tab{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.5px;padding:8px 12px;border:2px solid var(--ink);background:transparent;cursor:pointer;color:var(--ink);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
 
-.evalBlock{margin-bottom:26px;}
-.evalBlock h2{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:12px;}
-.taskGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(max-width:600px){.taskGrid{grid-template-columns:1fr;}}
-.taskCard{background:var(--card);border:2px solid var(--ink);padding:16px;display:flex;flex-direction:column;gap:10px;min-height:120px;}
-.taskCard.empty{border-style:dashed;border-color:var(--line);background:transparent;}
-.taskCard .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);letter-spacing:1px;text-transform:uppercase;}
-.taskCard h3{font-family:'Big Shoulders Display',sans-serif;font-size:19px;text-transform:uppercase;margin:0;line-height:1.1;}
-.taskCard p{font-size:13px;line-height:1.4;color:var(--ink-soft);margin:0;flex:1;}
-.taskCard.empty p{font-style:italic;}
-.taskCard a.btn{align-self:flex-start;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.5px;padding:9px 14px;border:2px solid var(--red);background:var(--red);color:#fff;text-decoration:none;text-transform:uppercase;}
+.panel{display:none;}
+.panel.active{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:2px solid var(--ink);padding:20px;margin-bottom:16px;position:relative;}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--ink-soft);text-transform:uppercase;margin-bottom:6px;}
+.card h2{font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:24px;text-transform:uppercase;margin:0 0 12px;}
+.concept-box{background:#fff;border:2px solid var(--ink);padding:16px;margin-bottom:14px;}
+.concept-box .tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:block;color:var(--ink-soft);}
+.concept-box p{margin:0;font-size:14.5px;line-height:1.5;}
+.scenario{background:var(--mito-bg);border:2px dashed var(--mito);padding:16px;margin-bottom:14px;}
+.scenario .tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--mito);text-transform:uppercase;display:block;margin-bottom:8px;}
+.scenario p{margin:0;font-size:15px;line-height:1.5;font-weight:500;}
+textarea{width:100%;min-height:150px;font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.5;padding:14px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);resize:vertical;}
+textarea:focus{outline:3px solid var(--warn);outline-offset:0;}
+.meta-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);}
+.counter.ok{color:var(--realidad);font-weight:600;}
+.stamp{position:absolute;top:18px;right:18px;font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:14px;letter-spacing:1px;color:var(--realidad);border:3px solid var(--realidad);border-radius:50%;width:74px;height:74px;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-12deg) scale(0);opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;pointer-events:none;text-transform:uppercase;line-height:1.1;}
+.stamp.show{transform:rotate(-12deg) scale(1);opacity:.9;}
+.stepnav{display:flex;justify-content:space-between;margin-top:6px;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.5px;padding:11px 18px;border:2px solid var(--red);background:var(--red);color:#fff;cursor:pointer;}
+.btn.ghost{background:transparent;color:var(--ink);}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.rubric-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center;}
+.rubric-row:last-child{border-bottom:none;}
+.rubric-row .desc{font-size:13.5px;line-height:1.4;}
+.rubric-row .desc b{display:block;font-size:12.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:2px;font-family:'JetBrains Mono',monospace;}
+.rubric-row .motivo{font-size:12px;color:var(--ink-soft);margin-top:3px;font-style:italic;}
+.scale{display:flex;gap:6px;}
+.scale button{width:36px;height:36px;border:2px solid var(--ink);background:var(--paper);font-family:'JetBrains Mono',monospace;font-weight:600;cursor:pointer;}
+.scale button.sel{background:var(--red);color:#fff;border-color:var(--red);}
+.final-score{margin-top:14px;padding:14px 16px;background:var(--red);color:#fff;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;}
+.final-score .num{font-family:'Big Shoulders Display',sans-serif;font-size:30px;font-weight:800;}
+.footer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.hint{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.5;}
+
+.gate{max-width:320px;margin:60px auto;text-align:center;}
+.gate input{width:100%;padding:11px;font-family:'JetBrains Mono',monospace;border:2px solid var(--ink);background:var(--card);margin-bottom:10px;}
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.toolbar .count{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);margin-left:auto;}
+.entrega-card{background:var(--card);border:2px solid var(--ink);margin-bottom:12px;}
+.rowhead{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;cursor:pointer;gap:10px;flex-wrap:wrap;}
+.rowhead .who b{font-family:'Big Shoulders Display',sans-serif;font-size:18px;text-transform:uppercase;}
+.rowhead .who span{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);}
+.badge{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 10px;border:2px solid;letter-spacing:.5px;text-transform:uppercase;}
+.badge.pendiente{border-color:var(--warn);color:var(--warn);}
+.badge.falta{border-color:var(--mito);color:var(--mito);}
+.badge.evaluado{border-color:var(--realidad);color:var(--realidad);background:var(--realidad-bg);}
+.body2{display:none;padding:0 16px 16px;border-top:2px solid var(--line);}
+.body2.open{display:block;}
+.answer{margin:12px 0;}
+.answer .tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px;}
+.answer p{margin:0;font-size:14px;line-height:1.5;white-space:pre-wrap;background:#fff;border:1px solid var(--line);padding:10px;}
+textarea.comentario{width:100%;min-height:56px;font-family:'Inter',sans-serif;font-size:13.5px;padding:10px;border:2px solid var(--ink);background:#fff;margin-top:10px;}
+.spinner{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--warn);}
 </style>
 </head>
 <body>
+<div class="brandbar">
+  <img src="data:image/png;base64,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" alt="Salesianos Triana">
+</div>
 <div class="wrap">
-  <div class="masthead">
-    <h1>Tareas de<br>Educación Física</h1>
-    <div class="sub">2º Y 4º ESO · POR EVALUACIÓN</div>
+
+  <div class="roleBar">
+    <button class="roleBtn on" id="roleAlumno">Soy alumno/a</button>
+    <button class="roleBtn" id="roleProfe">Área del profesor</button>
   </div>
 
-  <div class="cursoTabs" id="cursoTabs"></div>
-  <div id="evaluaciones"></div>
+  <!-- ALUMNO -->
+  <div id="viewAlumno">
+    <div class="masthead">
+      <div>
+        <h1>Expediente de<br>Verificación</h1>
+        <div class="sub">ARBITRAJE DEPORTIVO: EL ROL DEL ÁRBITRO Y EL JUEGO LIMPIO · CASO PERSONAL</div>
+      </div>
+      <div class="nameplate">
+        <div><label>Curso y grupo</label>
+          <select id="studentGroup">
+            <option value="">—</option>
+            <option value="4A">4º ESO A</option>
+            <option value="4B">4º ESO B</option>
+            <option value="4C">4º ESO C</option>
+          </select>
+        </div>
+        <div><label>Alumno/a</label>
+          <select id="studentNameSelect" style="min-width:170px;"><option value="">Elige tu grupo primero</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="tabs" id="tabs"></div>
+    <div id="panels"></div>
+  </div>
+
+  <!-- PROFESOR -->
+  <div id="viewProfe" class="hidden">
+    <div id="gate" class="gate">
+      <h1 style="font-family:'Big Shoulders Display',sans-serif;font-size:26px;text-transform:uppercase;">Área del profesor</h1>
+      <input type="password" id="pass" placeholder="Contraseña">
+      <button class="btn" id="enterBtn" style="width:100%;">Entrar</button>
+      <p id="gateMsg" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mito);"></p>
+    </div>
+    <div id="profeMain" class="hidden">
+      <div class="toolbar">
+        <button class="btn" id="evalAllBtn">Evaluar con IA todos los pendientes</button>
+        <button class="btn ghost" id="csvBtn">Exportar CSV</button>
+        <span class="count" id="countInfo"></span>
+      </div>
+      <div id="list"></div>
+    </div>
+  </div>
+
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
-// ── TAREAS ─────────────────────────────────────────────────────
-// Añade o edita aquí cada tarea. Deja "url":"" para que se vea como
-// "sin asignar" hasta que la tengas publicada.
-const TASKS = [
-  {curso:"4", evaluacion:1, slot:1,
-   titulo:"Expediente de Verificación: Mitos de la Actividad Física",
-   descripcion:"5 estaciones mito/realidad + situaciones reales para resolver.",
-   url:"/tareas-ef2627/4ºESO/eval1-tarea1-mitos/"},
-  {curso:"4", evaluacion:1, slot:2,
-   titulo:"Expediente de Verificación: Presión Competitiva",
-   descripcion:"5 estaciones sobre psicología del rendimiento + situaciones reales para resolver.",
-   url:"/tareas-ef2627/4ºESO/eval1-tarea2-presion%20dentro/"},
-  {curso:"4", evaluacion:2, slot:1,
-   titulo:"Expediente de Verificación: Estrategia Deportiva",
-   descripcion:"5 estaciones sobre ataque, defensa y táctica + situaciones reales para resolver.",
-   url:"/tareas-ef2627/4ºESO/eval2-tarea1-estrategia/"},
-  {curso:"4", evaluacion:2, slot:2,
-   titulo:"Expediente de Verificación: Arbitraje Deportivo",
-   descripcion:"5 estaciones sobre el rol del árbitro y el juego limpio + situaciones reales para resolver.",
-   url:"/tareas-ef2627/4ºESO/eval2-tarea2-arbitraje/"},
-  {curso:"4", evaluacion:3, slot:1, titulo:"", descripcion:"", url:""},
-  {curso:"4", evaluacion:3, slot:2, titulo:"", descripcion:"", url:""},
-  {curso:"2", evaluacion:1, slot:1, titulo:"", descripcion:"", url:""},
-  {curso:"2", evaluacion:1, slot:2, titulo:"", descripcion:"", url:""},
-  {curso:"2", evaluacion:2, slot:1, titulo:"", descripcion:"", url:""},
-  {curso:"2", evaluacion:2, slot:2, titulo:"", descripcion:"", url:""},
-  {curso:"2", evaluacion:3, slot:1, titulo:"", descripcion:"", url:""},
-  {curso:"2", evaluacion:3, slot:2, titulo:"", descripcion:"", url:""},
+// ── CONFIGURACIÓN ─────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyCsPi1YtKxDyeVKTvx2y2z_b48qluqpJAU",
+  authDomain: "tareas-alumnado2y4eso.firebaseapp.com",
+  databaseURL: "https://tareas-alumnado2y4eso-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "tareas-alumnado2y4eso",
+};
+const ANIO = "2026-2027";
+const RUTA_LISTAS = `listas_grupos`;
+const RUTA_ENTREGAS = `entregas_arbitraje_deportivo/${ANIO}`;
+const TEACHER_PASS = "triana2027";
+const GRUPOS = ["4A","4B","4C"];
+const GRUPO_LABELS = {"4A":"4º ESO A","4B":"4º ESO B","4C":"4º ESO C"};
+
+let db = null;
+if (firebaseConfig.apiKey) {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    firebase.auth().signInAnonymously().catch(e=>console.warn(e));
+  } catch(e){ console.warn("Firebase no disponible.", e); }
+}
+
+function slug(str){
+  return (str||"").toString().trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"") || "alumno";
+}
+
+/* ============ ROLE SWITCH ============ */
+document.getElementById("roleAlumno").onclick = ()=>{
+  document.getElementById("roleAlumno").classList.add("on");
+  document.getElementById("roleProfe").classList.remove("on");
+  document.getElementById("viewAlumno").classList.remove("hidden");
+  document.getElementById("viewProfe").classList.add("hidden");
+};
+document.getElementById("roleProfe").onclick = ()=>{
+  document.getElementById("roleProfe").classList.add("on");
+  document.getElementById("roleAlumno").classList.remove("on");
+  document.getElementById("viewProfe").classList.remove("hidden");
+  document.getElementById("viewAlumno").classList.add("hidden");
+};
+
+/* ============ ROSTERS ============ */
+let rosters = {}; GRUPOS.forEach(g=> rosters[g]=[]);
+function loadRostersForStudentView(){
+  if(!db) return;
+  GRUPOS.forEach(g=>{
+    db.ref(`${RUTA_LISTAS}/${g}`).on("value", snap=>{
+      rosters[g] = snap.val() || [];
+      if(document.getElementById("studentGroup").value === g) fillNameSelect(g);
+      renderEntregas();
+    });
+  });
+}
+function fillNameSelect(g){
+  const sel = document.getElementById("studentNameSelect");
+  const list = rosters[g] || [];
+  if(list.length===0){
+    sel.innerHTML = `<option value="">(sin lista — escribe tu nombre al profesor)</option>`;
+    return;
+  }
+  sel.innerHTML = `<option value="">Elige tu nombre</option>` + list.map(n=>`<option value="${n}">${n}</option>`).join("");
+}
+document.getElementById("studentGroup").addEventListener("change", e=> fillNameSelect(e.target.value));
+
+/* ============ ESTACIONES (contenido) ============ */
+const STATIONS = [
+  {id:1, titulo:"Pedagogía deportiva del árbitro",
+   concepto:"El arbitraje no se limita a sancionar faltas: tiene una responsabilidad educativa. El árbitro debe aprovechar las interrupciones del partido para explicar sus decisiones con calma, usando la comunicación para fomentar el juego limpio en vez de imponer autoridad de forma distante.",
+   escenarioTag:"Situación real",
+   escenario:"Arbitras (o participas en) un partido de clase y se pita una falta dudosa. El jugador afectado dice que no fue así. En vez de solo repetir la norma y seguir, ¿qué le dirías para aprovechar ese momento como pedagogía deportiva?",
+   minChars:280},
+  {id:2, titulo:"Los tres pilares de la preparación arbitral",
+   concepto:"La formación de un árbitro no es solo conocer las reglas. Necesita preparación física (seguir el ritmo del juego), preparación técnica (dominio de normas y tácticas) y preparación psicológica (comunicación y control emocional ante conflictos y presión externa).",
+   escenarioTag:"Situación real",
+   escenario:"Piensa en un momento, arbitrando o jugando, en el que viste a alguien perder el control bajo la presión de un partido. ¿Qué pilar de preparación (física, técnica o psicológica) crees que le faltó en ese momento, y qué haría diferente la próxima vez?",
+   minChars:280},
+  {id:3, titulo:"Persona antes que oficial",
+   concepto:"Según Betancor, el árbitro es primero persona y después oficial: su labor se basa en el respeto y la honestidad. Si comete un error, debe asumirlo con humildad; no existe el arbitraje perfecto, y admitirlo refuerza su integridad en vez de debilitarla.",
+   escenarioTag:"Situación real",
+   escenario:"Un jugador comete una falta clara al derribar a un oponente, pero al sonar el silbato insiste en que fue un accidente total y que no tuvo intención. El reglamento exige sanción, pero el jugador insiste en su inocencia. ¿Cómo actuarías para ser justo con el reglamento y a la vez humano con el jugador?",
+   minChars:280},
+  {id:4, titulo:"Gestión de la presión externa",
+   concepto:"El árbitro se enfrenta a presión de entrenadores, jugadores y público, sobre todo tras decisiones ajustadas (\"close calls\"). Mantener el control emocional y la comunicación tranquila es parte de la preparación psicológica, y evita que el conflicto se contagie al resto del partido.",
+   escenarioTag:"Situación real",
+   escenario:"Tras una decisión muy ajustada en un momento crítico, un entrenador empieza a gritarte desde la banda, cuestionando tu honestidad y exigiendo que cambies la decisión. El ambiente se calienta y los jugadores empiezan a distraerse. Describe, paso a paso, cómo gestionarías esa situación.",
+   minChars:280},
+  {id:5, titulo:"Juego limpio más allá del reglamento",
+   concepto:"El juego limpio (fair play) va más allá de cumplir el reglamento técnico. La integridad y el respeto mutuo también forman parte del deporte, aunque no exista una norma escrita que sancione cada comportamiento.",
+   escenarioTag:"Situación real",
+   escenario:"El mejor jugador del partido está ganando, pero se burla constantemente de sus rivales de forma sarcástica. No ha roto ninguna regla técnica ni ha cometido falta física, pero su comportamiento está destruyendo el respeto mutuo. ¿Intervendrías como árbitro aunque no haya falta reglamentaria? Justifica tu respuesta con los conceptos de juego limpio e integridad.",
+   minChars:220}
+];
+const CRITERIA = [
+  {key:"argumentacion", label:"Argumentación ética y técnica", desc:"¿Usa correctamente los conceptos de la unidad (pedagogía deportiva, integridad, juego limpio, preparación psicológica)?"},
+  {key:"aplicacion", label:"Aplicación personal", desc:"¿La respuesta parte de una situación concreta y creíble, no de un consejo genérico?"},
+  {key:"redaccion", label:"Redacción y coherencia", desc:"¿Se entiende bien, tiene hilo y está organizada?"}
 ];
 
-let cursoActivo = "4";
+/* ============ ALUMNO: estado local ============ */
+const STORAGE_KEY = "expediente_arbitraje_4eso_v1";
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+state.answers = state.answers || {};
+state.rubric = state.rubric || {};
+let activeTab = "1";
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function isDone(st){ return (state.answers[st.id]||"").trim().length >= st.minChars; }
 
-function renderCursoTabs(){
-  const el = document.getElementById("cursoTabs");
-  el.innerHTML = "";
-  [["4","4º ESO"],["2","2º ESO"]].forEach(([val,label])=>{
+function renderTabs(){
+  const tabsEl = document.getElementById("tabs"); tabsEl.innerHTML = "";
+  STATIONS.forEach(st=>{
     const b = document.createElement("button");
-    b.className = "cursoTab" + (cursoActivo===val ? " on":"");
-    b.textContent = label;
-    b.onclick = ()=>{ cursoActivo = val; render(); };
-    el.appendChild(b);
+    b.className = "tab" + (activeTab==String(st.id)?" active":"");
+    b.textContent = "EXPEDIENTE 0"+st.id;
+    b.onclick = ()=>{ activeTab=String(st.id); renderAll(); };
+    tabsEl.appendChild(b);
   });
+  const b2 = document.createElement("button");
+  b2.className = "tab" + (activeTab=="cierre"?" active":"");
+  b2.textContent = "CIERRE";
+  b2.onclick = ()=>{ activeTab="cierre"; renderAll(); };
+  tabsEl.appendChild(b2);
+}
+function renderProgress(){
+  const p = document.getElementById("progress"); p.innerHTML = "";
+  STATIONS.forEach(st=>{ const d=document.createElement("div"); d.className="dot"+(isDone(st)?" done":""); d.textContent=st.id; p.appendChild(d); });
+  const cd = document.createElement("div"); cd.className="dot"+(STATIONS.every(isDone)?" done":""); cd.textContent="✓"; p.appendChild(cd);
+}
+function stationPanel(st){
+  const div = document.createElement("div");
+  div.className = "panel" + (activeTab==String(st.id)?" active":"");
+  const val = state.answers[st.id] || "";
+  const len = val.trim().length;
+  const done = len >= st.minChars;
+  div.innerHTML = `
+    <div class="card">
+      <div class="stamp ${done?'show':''}">CASO<br>VERIFICADO</div>
+      <div class="eyebrow">Expediente 0${st.id} · Concepto clave</div>
+      <h2>${st.titulo}</h2>
+      <div class="concept-box"><span class="tag">Qué dice sobre arbitraje deportivo</span><p>${st.concepto}</p></div>
+      <div class="scenario"><span class="tag">${st.escenarioTag}</span><p>${st.escenario}</p></div>
+      <textarea id="ta-${st.id}" placeholder="Escribe tu respuesta con tus propias palabras y con detalles concretos...">${val}</textarea>
+      <div class="meta-row">
+        <span>Mínimo ${st.minChars} caracteres para cerrar el caso</span>
+        <span class="counter ${done?'ok':''}" id="counter-${st.id}">${len} / ${st.minChars}</span>
+      </div>
+    </div>
+    <div class="stepnav">
+      <button class="btn ghost" data-prev="${st.id}">← Anterior</button>
+      <button class="btn" data-next="${st.id}">Siguiente →</button>
+    </div>`;
+  return div;
+}
+function cierrePanel(){
+  const div = document.createElement("div");
+  div.className = "panel" + (activeTab=="cierre"?" active":"");
+  let rows = CRITERIA.map(c=>{
+    const sel = state.rubric[c.key];
+    const buttons = [0,1,2].map(v=>`<button data-crit="${c.key}" data-val="${v}" class="${sel===v?'sel':''}">${v}</button>`).join("");
+    return `<div class="rubric-row"><div class="desc"><b>${c.label}</b>${c.desc}</div><div class="scale">${buttons}</div></div>`;
+  }).join("");
+  const vals = CRITERIA.map(c=>state.rubric[c.key]).filter(v=>v!==undefined);
+  const avg = vals.length===3 ? (vals.reduce((a,b)=>a+b,0)/3).toFixed(2) : "—";
+  div.innerHTML = `
+    <div class="card">
+      <div class="eyebrow">Cierre del expediente · Autoevaluación</div>
+      <h2>Antes de entregar</h2>
+      <p style="font-size:14px;line-height:1.5;margin-top:-6px;">Puntúa tu propio trabajo de 0 a 2 en cada criterio, con honestidad.</p>
+      ${rows}
+      <div class="final-score"><span>NOTA MEDIA (autoevaluación)</span><span class="num">${avg}</span></div>
+    </div>
+    <div class="footer-actions">
+      <button class="btn" id="submitBtn">Enviar expediente al profesor</button>
+      <button class="btn ghost" id="downloadBtn">Descargar informe (.txt)</button>
+      <button class="btn ghost" id="printBtn">Imprimir / PDF</button>
+    </div>
+    <p class="hint" id="submitStatus">${state.enviado ? `Enviado el ${new Date(state.enviado).toLocaleString('es-ES')}. Puedes reenviarlo si corriges algo.` : "Elige tu grupo y tu nombre arriba y pulsa \"Enviar expediente\" cuando termines."}</p>`;
+  return div;
+}
+function renderPanels(){
+  const cont = document.getElementById("panels"); cont.innerHTML = "";
+  STATIONS.forEach(st=> cont.appendChild(stationPanel(st)));
+  cont.appendChild(cierrePanel());
+  STATIONS.forEach(st=>{
+    const ta = document.getElementById("ta-"+st.id);
+    ta.addEventListener("input", e=>{
+      state.answers[st.id] = e.target.value; save();
+      const len = e.target.value.trim().length;
+      const c = document.getElementById("counter-"+st.id);
+      c.textContent = `${len} / ${st.minChars}`; c.classList.toggle("ok", len>=st.minChars);
+      e.target.closest(".card").querySelector(".stamp").classList.toggle("show", len>=st.minChars);
+      renderProgress();
+    });
+  });
+  cont.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>{ const id=parseInt(b.dataset.next); activeTab = id<5?String(id+1):"cierre"; renderAll(); });
+  cont.querySelectorAll("[data-prev]").forEach(b=>b.onclick=()=>{ const id=parseInt(b.dataset.prev); activeTab = id>1?String(id-1):"1"; renderAll(); });
+  cont.querySelectorAll("[data-crit]").forEach(b=>b.onclick=()=>{ state.rubric[b.dataset.crit]=parseInt(b.dataset.val); save(); renderAll(); });
+  const dl = document.getElementById("downloadBtn"); if(dl) dl.onclick = downloadReport;
+  const pr = document.getElementById("printBtn"); if(pr) pr.onclick = ()=>window.print();
+  const sb = document.getElementById("submitBtn"); if(sb) sb.onclick = submitToTeacher;
+}
+function downloadReport(){
+  const nombre = document.getElementById("studentNameSelect").value;
+  let out = `EXPEDIENTE DE VERIFICACIÓN — ARBITRAJE DEPORTIVO: EL ROL DEL ÁRBITRO Y EL JUEGO LIMPIO\nAlumno/a: ${nombre}\nFecha: ${new Date().toLocaleDateString('es-ES')}\n${"=".repeat(60)}\n\n`;
+  STATIONS.forEach(st=>{ out += `EXPEDIENTE ${st.id} — ${st.titulo.toUpperCase()}\nSituación: ${st.escenario}\n\nRespuesta:\n${(state.answers[st.id]||"(sin responder)")}\n\n${"-".repeat(60)}\n\n`; });
+  out += `AUTOEVALUACIÓN\n`;
+  let sum=0,count=0;
+  CRITERIA.forEach(c=>{ const v=state.rubric[c.key]; if(v!==undefined){sum+=v;count++;} out += `- ${c.label}: ${v!==undefined?v:"—"} / 2\n`; });
+  out += `Nota media: ${count===3?(sum/3).toFixed(2):"—"}\n`;
+  const blob = new Blob([out], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `expediente_arbitraje_${slug(nombre)}.txt`; a.click();
+}
+async function submitToTeacher(){
+  const grupo = document.getElementById("studentGroup").value;
+  const nombre = document.getElementById("studentNameSelect").value;
+  const statusEl = document.getElementById("submitStatus");
+  if(!grupo || !nombre){ statusEl.textContent = "Elige tu grupo y tu nombre arriba antes de enviar."; statusEl.style.color = "var(--mito)"; return; }
+  if(!db){ statusEl.textContent = "Esta copia no está conectada al profesor: descarga el informe y entrégalo por Classroom."; statusEl.style.color = "var(--mito)"; return; }
+  const payload = { nombre, grupo, respuestas: state.answers, autoevaluacion: state.rubric, timestamp: Date.now() };
+  try{
+    await db.ref(`${RUTA_ENTREGAS}/${slug(grupo)}_${slug(nombre)}`).set(payload);
+    state.enviado = payload.timestamp; save();
+    statusEl.textContent = `Enviado correctamente el ${new Date(payload.timestamp).toLocaleString('es-ES')}.`; statusEl.style.color = "var(--realidad)";
+  }catch(e){ statusEl.textContent = "No se ha podido enviar. Descarga el informe como copia de seguridad."; statusEl.style.color = "var(--mito)"; console.error(e); }
+}
+function renderAll(){ renderTabs(); renderProgress(); renderPanels(); }
+renderAll();
+loadRostersForStudentView();
+
+/* ============ PROFESOR: gate ============ */
+document.getElementById("enterBtn").onclick = enterProfe;
+document.getElementById("pass").addEventListener("keydown", e=>{ if(e.key==="Enter") enterProfe(); });
+function enterProfe(){
+  if(document.getElementById("pass").value !== TEACHER_PASS){
+    document.getElementById("gateMsg").textContent = "Contraseña incorrecta."; return;
+  }
+  document.getElementById("gate").classList.add("hidden");
+  document.getElementById("profeMain").classList.remove("hidden");
+  renderEntregas();
 }
 
-function render(){
-  renderCursoTabs();
-  const cont = document.getElementById("evaluaciones");
-  cont.innerHTML = "";
-  [1,2,3].forEach(ev=>{
-    const block = document.createElement("div");
-    block.className = "evalBlock";
-    const tareas = TASKS.filter(t=> t.curso===cursoActivo && t.evaluacion===ev).sort((a,b)=>a.slot-b.slot);
-    const cardsHtml = tareas.map(t=>{
-      if(!t.titulo){
-        return `<div class="taskCard empty"><span class="num">Tarea ${t.slot}</span><p>Sin asignar todavía.</p></div>`;
-      }
-      const boton = t.url
-        ? `<a class="btn" href="${t.url}">Abrir tarea →</a>`
-        : `<span class="taskCard empty" style="border:none;padding:0;"><p>(pendiente de publicar)</p></span>`;
-      return `<div class="taskCard">
-        <span class="num">Tarea ${t.slot}</span>
-        <h3>${t.titulo}</h3>
-        <p>${t.descripcion||""}</p>
-        ${boton}
-      </div>`;
-    }).join("");
-    block.innerHTML = `<h2>${ev}ª Evaluación</h2><div class="taskGrid">${cardsHtml}</div>`;
-    cont.appendChild(block);
+/* ============ PROFESOR: entregas ============ */
+let records = {};
+if(db){
+  db.ref(RUTA_ENTREGAS).on("value", snap=>{ records = snap.val() || {}; renderEntregas(); });
+}
+const STATION_TITLES = Object.fromEntries(STATIONS.map(s=>[s.id, s.titulo]));
+
+function renderEntregas(){
+  const list = document.getElementById("list");
+  if(!list) return;
+  list.innerHTML = "";
+
+  let pendientesSinEnviar = [];
+  GRUPOS.forEach(g=>{
+    (rosters[g]||[]).forEach(nombre=>{
+      const key = `${slug(g)}_${slug(nombre)}`;
+      if(!records[key]) pendientesSinEnviar.push({key, nombre, grupo:g});
+    });
+  });
+
+  const entregadas = Object.keys(records).sort((a,b)=> (records[b].timestamp||0)-(records[a].timestamp||0));
+  const evaluados = entregadas.filter(k=>records[k].evaluacion).length;
+  const countInfo = document.getElementById("countInfo");
+  if(countInfo) countInfo.textContent = `${entregadas.length} entregados · ${evaluados} evaluados · ${pendientesSinEnviar.length} sin entregar`;
+
+  pendientesSinEnviar.forEach(p=>{
+    const card = document.createElement("div");
+    card.className = "entrega-card";
+    card.innerHTML = `<div class="rowhead"><div class="who"><b>${p.nombre}</b><span>${GRUPO_LABELS[p.grupo]||p.grupo} · sin enviar</span></div><span class="badge falta">Sin entregar</span></div>`;
+    list.appendChild(card);
+  });
+
+  entregadas.forEach(key=>{
+    const r = records[key];
+    const done = !!r.evaluacion;
+    const card = document.createElement("div");
+    card.className = "entrega-card";
+    card.innerHTML = `
+      <div class="rowhead" data-key="${key}">
+        <div class="who"><b>${r.nombre}</b><span>${GRUPO_LABELS[r.grupo]||r.grupo} · ${new Date(r.timestamp).toLocaleString('es-ES')}</span></div>
+        <span class="badge ${done?'evaluado':'pendiente'}">${done?`Nota: ${r.evaluacion.notaMedia}`:'Pendiente de evaluar'}</span>
+      </div>
+      <div class="body2" id="body-${key}"></div>`;
+    card.querySelector(".rowhead").onclick = ()=> toggleBody(key);
+    list.appendChild(card);
   });
 }
-render();
+function toggleBody(key){
+  const body = document.getElementById("body-"+key);
+  if(body.classList.contains("open")){ body.classList.remove("open"); return; }
+  body.classList.add("open"); renderBody(key);
+}
+function calcAvg(criterios){
+  const vals = CRITERIA.map(c=>criterios[c.key]?.nota).filter(v=>v!==undefined && v!==null);
+  if(vals.length!==3) return "—";
+  return (vals.reduce((a,b)=>a+b,0)/3).toFixed(2);
+}
+function ensureEval(r){ if(!r.evaluacion) r.evaluacion = {criterios:{}, comentario:""}; }
+function renderBody(key){
+  const r = records[key];
+  const body = document.getElementById("body-"+key);
+  const answersHtml = Object.keys(r.respuestas||{}).sort().map(id=>`
+    <div class="answer"><span class="tag">Expediente ${id} — ${STATION_TITLES[id]||''}</span><p>${(r.respuestas[id]||'').replace(/</g,'&lt;')}</p></div>`).join("");
+  const ev = r.evaluacion || {criterios:{}, comentario:""};
+  const rubricHtml = CRITERIA.map(c=>{
+    const crit = ev.criterios[c.key] || {};
+    const buttons = [0,1,2].map(v=>`<button data-key="${key}" data-crit="${c.key}" data-val="${v}" class="${crit.nota===v?'sel':''}">${v}</button>`).join("");
+    return `<div class="rubric-row"><div class="desc"><b>${c.label}</b>${c.desc}${crit.motivo?`<div class="motivo">IA: "${crit.motivo}"</div>`:""}</div><div class="scale">${buttons}</div></div>`;
+  }).join("");
+  body.innerHTML = `
+    ${answersHtml}
+    <div style="margin-top:14px;">${rubricHtml}</div>
+    <textarea class="comentario" id="comentario-${key}" placeholder="Comentario para el alumno (opcional)">${ev.comentario||""}</textarea>
+    <div class="final-score"><span>NOTA MEDIA</span><span class="num" id="avg-${key}">${calcAvg(ev.criterios)}</span></div>
+    <div class="footer-actions">
+      <button class="btn" data-eval="${key}">Evaluar con IA</button>
+      <button class="btn ghost" data-save="${key}">Guardar nota final</button>
+      <span class="spinner" id="spinner-${key}"></span>
+    </div>`;
+  body.querySelectorAll("[data-crit]").forEach(b=>b.onclick=()=>{
+    ensureEval(r);
+    r.evaluacion.criterios[b.dataset.crit] = {...(r.evaluacion.criterios[b.dataset.crit]||{}), nota: parseInt(b.dataset.val)};
+    r.evaluacion.notaMedia = calcAvg(r.evaluacion.criterios);
+    renderBody(key);
+  });
+  body.querySelector(`[data-eval="${key}"]`).onclick = ()=> evaluateWithAI(key);
+  body.querySelector(`[data-save="${key}"]`).onclick = ()=> saveFinal(key);
+}
+async function evaluateWithAI(key){
+  const r = records[key];
+  const spinner = document.getElementById("spinner-"+key);
+  if(spinner) spinner.textContent = "Evaluando...";
+  const respuestasTexto = Object.keys(r.respuestas||{}).sort().map(id=>`Expediente ${id} (${STATION_TITLES[id]||''}):\n${r.respuestas[id]}`).join("\n\n");
+  const criteriosTexto = CRITERIA.map(c=>`- ${c.key}: ${c.label} — ${c.desc}`).join("\n");
+  const prompt = `Eres un profesor de Educación Física de 4º ESO corrigiendo un trabajo escrito sobre arbitraje deportivo (el rol del árbitro y el juego limpio). Evalúa las siguientes respuestas de un alumno/a según esta rúbrica de 3 criterios, cada uno puntuado de 0 a 2 (0=no cumple, 1=cumple parcialmente, 2=cumple bien):
+
+${criteriosTexto}
+
+Respuestas del alumno/a:
+${respuestasTexto}
+
+Devuelve SOLO un JSON válido, sin texto adicional ni bloques de código, con esta forma exacta:
+{"argumentacion":{"nota":0,"motivo":"..."},"aplicacion":{"nota":0,"motivo":"..."},"redaccion":{"nota":0,"motivo":"..."},"comentarioGeneral":"..."}
+Cada "motivo" debe tener máximo 15 palabras. El "comentarioGeneral" debe tener máximo 30 palabras, en tono constructivo y dirigido al alumno/a.`;
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:500, messages:[{role:"user", content:prompt}] })
+    });
+    const data = await response.json();
+    const textBlock = data.content.find(b=>b.type==="text");
+    const parsed = JSON.parse(textBlock.text.replace(/```json|```/g,"").trim());
+    ensureEval(r);
+    r.evaluacion.criterios = {
+      argumentacion:{nota:parsed.argumentacion.nota, motivo:parsed.argumentacion.motivo},
+      aplicacion:{nota:parsed.aplicacion.nota, motivo:parsed.aplicacion.motivo},
+      redaccion:{nota:parsed.redaccion.nota, motivo:parsed.redaccion.motivo}
+    };
+    r.evaluacion.notaMedia = calcAvg(r.evaluacion.criterios);
+    r.evaluacion.comentario = parsed.comentarioGeneral || "";
+    if(spinner) spinner.textContent = "";
+    renderBody(key);
+  }catch(e){ console.error(e); if(spinner) spinner.textContent = "Error al evaluar, inténtalo de nuevo."; }
+}
+async function saveFinal(key){
+  const r = records[key];
+  ensureEval(r);
+  r.evaluacion.comentario = document.getElementById("comentario-"+key).value;
+  r.evaluacion.notaMedia = calcAvg(r.evaluacion.criterios);
+  r.evaluacion.fecha = Date.now();
+  if(db) await db.ref(`${RUTA_ENTREGAS}/${key}/evaluacion`).set(r.evaluacion);
+  renderEntregas();
+}
+document.getElementById("evalAllBtn").onclick = async ()=>{
+  const keys = Object.keys(records).filter(k=>!records[k].evaluacion);
+  for(const k of keys){ await evaluateWithAI(k); await saveFinal(k); }
+};
+document.getElementById("csvBtn").onclick = ()=>{
+  let rows = [["Nombre","Grupo","Argumentacion","Aplicacion","Redaccion","NotaMedia","Comentario","Estado"]];
+  GRUPOS.forEach(g=>{
+    (rosters[g]||[]).forEach(nombre=>{
+      const key = `${slug(g)}_${slug(nombre)}`;
+      const r = records[key];
+      if(!r){ rows.push([nombre, GRUPO_LABELS[g]||g, "","","","","","Sin entregar"]); return; }
+      const c = (r.evaluacion&&r.evaluacion.criterios) || {};
+      rows.push([nombre, GRUPO_LABELS[g]||g, c.argumentacion?.nota??"", c.aplicacion?.nota??"", c.redaccion?.nota??"",
+        r.evaluacion?.notaMedia??"", (r.evaluacion?.comentario||"").replace(/\n/g," "), r.evaluacion?"Evaluado":"Pendiente de evaluar"]);
+    });
+  });
+  const csv = rows.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "notas_expediente_arbitraje.csv"; a.click();
+};
 </script>
 </body>
 </html>
