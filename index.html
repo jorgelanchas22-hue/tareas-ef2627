@@ -8,20 +8,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#E9E4D6; --card:#F7F4EA; --ink:#14202E; --ink-soft:#4A5568;
+  --paper:#FFFFFF; --card:#F7F7F7; --ink:#1A1A1A; --ink-soft:#6B6B6B;
   --mito:#B23A2E; --realidad:#1F7A4D; --realidad-bg:#DCEDE1;
-  --warn:#C98A22; --line:#C9C2AC;
+  --warn:#C98A22; --line:#DADADA; --red:#DC0614;
 }
 *{box-sizing:border-box;}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
 .wrap{max-width:900px;margin:0 auto;padding:30px 20px 80px;}
-.masthead{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:24px;}
+.masthead{border-bottom:3px solid var(--red);padding-bottom:16px;margin-bottom:24px;}
 .masthead h1{font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:clamp(28px,6vw,44px);line-height:.95;margin:0;text-transform:uppercase;}
 .masthead .sub{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);letter-spacing:1px;margin-top:6px;}
 
 .cursoTabs{display:flex;gap:8px;margin-bottom:24px;}
 .cursoTab{flex:1;font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:20px;letter-spacing:.5px;text-transform:uppercase;padding:14px;border:2px solid var(--ink);background:transparent;cursor:pointer;color:var(--ink);}
-.cursoTab.on{background:var(--ink);color:var(--paper);}
+.cursoTab.on{background:var(--red);color:#fff;border-color:var(--red);}
 
 .evalBlock{margin-bottom:26px;}
 .evalBlock h2{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:12px;}
@@ -33,7 +33,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-
 .taskCard h3{font-family:'Big Shoulders Display',sans-serif;font-size:19px;text-transform:uppercase;margin:0;line-height:1.1;}
 .taskCard p{font-size:13px;line-height:1.4;color:var(--ink-soft);margin:0;flex:1;}
 .taskCard.empty p{font-style:italic;}
-.taskCard a.btn{align-self:flex-start;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.5px;padding:9px 14px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;text-transform:uppercase;}
+.taskCard a.btn{align-self:flex-start;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.5px;padding:9px 14px;border:2px solid var(--red);background:var(--red);color:#fff;text-decoration:none;text-transform:uppercase;}
 </style>
 </head>
 <body>
