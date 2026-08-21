@@ -1,0 +1,1 @@
+fetch('mapa-web.jpg.b64').then(r=>r.text()).then(b64=>{window.__GYM_MAP='data:image/jpeg;base64,'+b64.trim();window.dispatchEvent(new Event('gym-map-ready'));}).catch(()=>{});
