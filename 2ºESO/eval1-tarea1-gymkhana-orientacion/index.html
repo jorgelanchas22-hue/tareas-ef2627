@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gymkhana Deportiva de Orientación</title>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#dc0614;--ink:#171717;--muted:#6b7280;--line:#d1d5db;--paper:#fff;--soft:#f6f7f8;--green:#087f5b;--amber:#b7791f}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--paper)}.top{border-bottom:4px solid var(--red);padding:12px 20px}.top b{font-family:'Big Shoulders Display';font-size:22px;text-transform:uppercase}.wrap{max-width:980px;margin:auto;padding:24px 18px 70px}.hero{display:grid;grid-template-columns:1.5fr .7fr;gap:18px;align-items:end;border-bottom:3px solid var(--ink);padding-bottom:20px;margin-bottom:22px}@media(max-width:700px){.hero{grid-template-columns:1fr}}h1,h2,h3{font-family:'Big Shoulders Display';text-transform:uppercase;margin:0}h1{font-size:clamp(34px,7vw,58px);line-height:.92}.sub{font-family:'JetBrains Mono';font-size:12px;color:var(--muted);margin-top:8px}.steps{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0}.step{border:2px solid var(--ink);padding:8px 11px;font:600 12px 'JetBrains Mono';background:#fff;cursor:pointer}.step.on{background:var(--red);border-color:var(--red);color:#fff}.panel{display:none}.panel.on{display:block}.card{border:2px solid var(--ink);background:var(--soft);padding:18px;margin-bottom:14px}.card h2{font-size:26px;margin-bottom:10px}.note{border-left:4px solid var(--red);padding:10px 12px;background:#fff;font-size:13px;line-height:1.45}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:700px){.grid{grid-template-columns:1fr}}label{display:block;font:600 11px 'JetBrains Mono';text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px}input,select,textarea{width:100%;padding:10px;border:2px solid var(--ink);background:#fff;font:14px Inter}textarea{min-height:86px;resize:vertical}.station{border:2px solid var(--ink);background:#fff;padding:14px;margin:12px 0}.station h3{font-size:20px}.btn{border:2px solid var(--red);background:var(--red);color:#fff;padding:10px 14px;font:600 12px 'JetBrains Mono';text-transform:uppercase;cursor:pointer}.btn.ghost{background:#fff;color:var(--ink);border-color:var(--ink)}.btn.green{background:var(--green);border-color:var(--green)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}.proposal{border:2px solid var(--ink);padding:15px;background:#fff}.proposal .code{font:600 11px 'JetBrains Mono';color:var(--muted)}.proposal h3{font-size:22px;margin:5px 0}.proposal p{font-size:13px;color:#4b5563;line-height:1.4}.score{font:600 12px 'JetBrains Mono';margin-top:8px}.votegrid{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:center;font-size:12px}.votegrid select{padding:6px}.hidden{display:none!important}.ok{color:var(--green)}.warn{color:var(--amber)}details{margin-top:10px}summary{cursor:pointer;font:600 12px 'JetBrains Mono';text-transform:uppercase}.prompt{white-space:pre-wrap;background:#111;color:#fff;padding:15px;font:12px/1.5 'JetBrains Mono';max-height:360px;overflow:auto}.rank{font:700 13px 'JetBrains Mono';padding:8px;background:#f3f4f6;margin:6px 0}
+</style>
+</head>
+<body>
+<div class="top"><b>Salesianos San Pedro · Educación Física</b></div>
+<div class="wrap">
+<section class="hero"><div><h1>Gymkhana deportiva<br>de orientación</h1><div class="sub">PROYECTO INDIVIDUAL · 8 CONTROLES · GALERÍA COMÚN</div></div><div class="note">Cada alumno diseña una propuesta propia. La galería se abre cuando has entregado tu trabajo.</div></section>
+<div class="steps">
+<button class="step on" data-p="idea">1 · Diseña</button><button class="step" data-p="prompt">2 · Prompt IA</button><button class="step" data-p="entrega">3 · Entrega</button><button class="step" data-p="galeria">4 · Galería</button><button class="step" data-p="ranking">5 · Selección</button>
+</div>
+
+<section id="idea" class="panel on">
+<div class="card"><h2>Tu reto</h2><p>Diseña individualmente una gymkhana deportiva de orientación que pueda realizarse en el centro. Debe tener <b>8 controles</b>, combinar orientación y actividad física, ser segura, clara y realizable.</p>
+<div class="note">Como mínimo, 3 de los 8 controles deben trabajar directamente la orientación: mapa, referencias, balizas, códigos, rumbo, localización o interpretación espacial.</div></div>
+<div class="card"><h2>Criterios de selección</h2><div class="grid"><div>Originalidad · 10</div><div>Calidad de pruebas · 10</div><div>Uso de la orientación · 10</div><div>Organización · 10</div><div>Diversión · 10</div><div>Viabilidad · 10</div><div>Seguridad · 10</div><div>Claridad · 10</div><div>Mapa/presentación · 10</div><div>Creatividad · 10</div></div></div>
+</section>
+
+<section id="prompt" class="panel">
+<div class="card"><h2>Prompt de ayuda</h2><p>La IA puede asesorarte, pero no hacerte el proyecto completo.</p><div id="promptText" class="prompt">Actúa como asesor de Educación Física especializado en orientación deportiva. Tengo que diseñar individualmente una gymkhana deportiva de orientación con 8 controles para realizarla en mi centro escolar. No debes hacerme el trabajo completo. Pregúntame primero mis ideas y ayúdame a mejorarlas.
+
+Mi proyecto debe incluir: nombre, temática, objetivo, participantes, duración, espacios, material, mapa o descripción del recorrido, 8 controles, pistas, sistema de puntuación, normas y medidas de seguridad.
+
+Al menos 3 controles deben trabajar directamente la orientación. Las pruebas deben ser variadas, seguras, realizables y combinar orientación con actividad física.
+
+Para cada control ayúdame a completar: nombre, lugar, pista para encontrarlo, objetivo, descripción, material, tiempo máximo, cómo se supera, puntuación y medida de seguridad.
+
+Cuando te proponga una prueba: 1) dime si es viable, 2) señala posibles problemas, 3) hazme una pregunta para mejorarla y 4) solo propón alternativas si estoy bloqueado.
+
+Al final revisa mi proyecto según: originalidad, calidad de las pruebas, uso de la orientación, organización, diversión, viabilidad, seguridad, claridad, presentación/mapa y creatividad. No redactes automáticamente las ocho estaciones por mí.</div>
+<div class="actions"><button class="btn" onclick="copyPrompt()">Copiar prompt</button></div></div>
+</section>
+
+<section id="entrega" class="panel">
+<div class="card"><h2>Identifícate</h2><div class="grid"><div><label>Grupo</label><select id="group"><option value="">Selecciona</option><option>2A</option><option>2B</option><option>2C</option></select></div><div><label>Nombre</label><select id="name"><option value="">Selecciona primero el grupo</option></select><input id="nameFallback" class="hidden" placeholder="Escribe tu nombre completo"></div></div><div class="note" id="rosterMsg">Si tu nombre no aparece en la lista, podrás escribirlo manualmente.</div></div>
+<form id="form">
+<div class="card"><h2>Datos generales</h2><div class="grid"><div><label>Título</label><input id="title" required></div><div><label>Temática</label><input id="theme" required></div><div><label>Duración aproximada</label><input id="duration" placeholder="Ej. 45 minutos" required></div><div><label>Material principal</label><input id="materials" required></div></div><label>Objetivo de la gymkhana</label><textarea id="objective" required></textarea><label>Espacios que utilizarías</label><textarea id="spaces" required></textarea><label>Mapa o descripción clara del recorrido</label><textarea id="mapdesc" required></textarea><label>Sistema de puntuación</label><textarea id="points" required></textarea><label>Normas y seguridad</label><textarea id="safety" required></textarea><label>¿Por qué debería elegirse tu propuesta?</label><textarea id="why" required></textarea></div>
+<div class="card"><h2>Los 8 controles</h2><div id="stations"></div></div>
+<div class="actions"><button class="btn green" type="submit">Entregar mi gymkhana</button><span id="saveMsg"></span></div>
+</form>
+</section>
+
+<section id="galeria" class="panel">
+<div class="card"><h2>Galería común</h2><p>Después de entregar puedes consultar las propuestas de 2º ESO. Para valorar una propuesta debes haber entregado la tuya y no puedes votarte a ti mismo.</p><div id="galleryMsg" class="note">Identifícate y entrega tu propuesta para abrir la galería.</div></div>
+<div id="gallery" class="gallery"></div>
+</section>
+
+<section id="ranking" class="panel">
+<div class="card"><h2>Selección de propuestas</h2><p>Clasificación orientativa según las valoraciones de compañeros. La decisión definitiva corresponde al profesor.</p><div id="rankingList"></div></div>
+</section>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyCsPi1YtKxDyeVKTvx2y2z_b48qluqpJAU",authDomain:"tareas-alumnado2y4eso.firebaseapp.com",databaseURL:"https://tareas-alumnado2y4eso-default-rtdb.europe-west1.firebasedatabase.app",projectId:"tareas-alumnado2y4eso"};
+const YEAR="2026-2027", ROOT=`gymkhana_orientacion/${YEAR}`, ROSTERS="listas_grupos", GROUPS=["2A","2B","2C"];
+let db=null, rosters={}, submissions={}, current={group:"",name:""};
+try{firebase.initializeApp(firebaseConfig);db=firebase.database();firebase.auth().signInAnonymously().catch(()=>{});}catch(e){console.warn(e)}
+const esc=s=>(s||"").toString().replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const slug=s=>(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+function userKey(){return current.group+"__"+slug(current.name)}
+document.querySelectorAll(".step").forEach(b=>b.onclick=()=>{document.querySelectorAll(".step").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id===b.dataset.p));if(b.dataset.p==="galeria")renderGallery();if(b.dataset.p==="ranking")renderRanking()});
+function copyPrompt(){navigator.clipboard.writeText(document.getElementById("promptText").innerText);alert("Prompt copiado");}
+const stations=document.getElementById("stations");
+for(let i=1;i<=8;i++){stations.insertAdjacentHTML("beforeend",`<div class="station"><h3>Control ${i}</h3><div class="grid"><div><label>Nombre</label><input id="s${i}name" required></div><div><label>Lugar</label><input id="s${i}place" required></div></div><label>Pista para encontrarlo</label><textarea id="s${i}clue" required></textarea><label>Prueba / objetivo</label><textarea id="s${i}test" required></textarea><div class="grid"><div><label>Material</label><input id="s${i}mat" required></div><div><label>Tiempo máximo</label><input id="s${i}time" required></div></div><div class="grid"><div><label>Cómo se supera / puntuación</label><textarea id="s${i}pass" required></textarea></div><div><label>Medida de seguridad</label><textarea id="s${i}safe" required></textarea></div></div></div>`)}
+function loadRosters(){if(!db)return;GROUPS.forEach(g=>db.ref(`${ROSTERS}/${g}`).on("value",s=>{rosters[g]=s.val()||[];if(document.getElementById("group").value===g)fillNames(g)}));}
+function fillNames(g){const sel=document.getElementById("name"),fb=document.getElementById("nameFallback"),arr=rosters[g]||[];sel.innerHTML='<option value="">Selecciona tu nombre</option>'+arr.map(n=>`<option>${esc(n)}</option>`).join("")+'<option value="__manual">Mi nombre no aparece</option>';fb.classList.add("hidden");}
+document.getElementById("group").onchange=e=>{current.group=e.target.value;current.name="";if(current.group)fillNames(current.group)};
+document.getElementById("name").onchange=e=>{if(e.target.value==="__manual"){document.getElementById("nameFallback").classList.remove("hidden");current.name=""}else{document.getElementById("nameFallback").classList.add("hidden");current.name=e.target.value}};
+document.getElementById("nameFallback").oninput=e=>current.name=e.target.value.trim();
+function collect(){const st=[];for(let i=1;i<=8;i++)st.push({name:val(`s${i}name`),place:val(`s${i}place`),clue:val(`s${i}clue`),test:val(`s${i}test`),material:val(`s${i}mat`),time:val(`s${i}time`),pass:val(`s${i}pass`),safe:val(`s${i}safe`)});return{group:current.group,name:current.name,title:val("title"),theme:val("theme"),duration:val("duration"),materials:val("materials"),objective:val("objective"),spaces:val("spaces"),mapdesc:val("mapdesc"),points:val("points"),safety:val("safety"),why:val("why"),stations:st,submittedAt:Date.now()}}
+const val=id=>document.getElementById(id).value.trim();
+document.getElementById("form").onsubmit=async e=>{e.preventDefault();if(!current.group||!current.name){alert("Selecciona grupo y nombre.");return}if(!db){alert("No hay conexión con la base de datos.");return}const data=collect();const key=userKey();await db.ref(`${ROOT}/entregas/${key}`).set(data);document.getElementById("saveMsg").textContent="✓ Entrega guardada";document.getElementById("saveMsg").className="ok";current.submitted=true;listenData();alert("Gymkhana entregada. Ya puedes entrar en la Galería común.")};
+function listenData(){if(!db)return;db.ref(`${ROOT}/entregas`).on("value",s=>{submissions=s.val()||{};const own=submissions[userKey()];current.submitted=!!own;renderGallery();renderRanking()})}
+async function loadVotesFor(key){const s=await db.ref(`${ROOT}/votos/${key}`).once("value");return s.val()||{}}
+function avgVotes(votes){const arr=Object.values(votes||{});if(!arr.length)return null;let total=0,n=0;arr.forEach(v=>["originalidad","diversion","orientacion","viabilidad","claridad"].forEach(k=>{total+=Number(v[k]||0);n++}));return n?total/n:null}
+async function renderGallery(){const box=document.getElementById("gallery"),msg=document.getElementById("galleryMsg");box.innerHTML="";if(!current.group||!current.name){msg.textContent="Selecciona tu grupo y nombre en Entrega para identificarte.";return}if(!submissions[userKey()]){msg.textContent="Primero debes entregar tu propia gymkhana.";return}msg.textContent="Galería abierta. Las propuestas se muestran sin destacar el nombre del autor.";const entries=Object.entries(submissions).sort((a,b)=>(a[1].submittedAt||0)-(b[1].submittedAt||0));for(let idx=0;idx<entries.length;idx++){const [key,p]=entries[idx],own=key===userKey(),votes=await loadVotesFor(key),av=avgVotes(votes);const card=document.createElement("div");card.className="proposal";card.innerHTML=`<div class="code">PROPUESTA ${String(idx+1).padStart(2,"0")} · ${esc(p.group||"")}${own?" · TU PROPUESTA":""}</div><h3>${esc(p.title)}</h3><p>${esc(p.theme)} · ${esc(p.duration)}</p><div class="score">${av?`Valoración media: ${av.toFixed(2)}/5 · ${Object.keys(votes).length} votos`:"Aún sin votos"}</div><details><summary>Ver propuesta</summary><p><b>Objetivo:</b> ${esc(p.objective)}</p><p><b>Recorrido:</b> ${esc(p.mapdesc)}</p>${(p.stations||[]).map((s,i)=>`<p><b>${i+1}. ${esc(s.name)}</b> — ${esc(s.place)}<br>${esc(s.clue)}<br>${esc(s.test)}</p>`).join("")}<p><b>Seguridad:</b> ${esc(p.safety)}</p><p><b>Por qué elegirla:</b> ${esc(p.why)}</p></details>${own?"":voteForm(key)}`;box.appendChild(card)}}
+function voteForm(key){return `<div style="margin-top:12px;border-top:1px solid var(--line);padding-top:10px"><div class="votegrid">${["originalidad","diversion","orientacion","viabilidad","claridad"].map(k=>`<span>${k[0].toUpperCase()+k.slice(1)}</span><select data-k="${k}" data-target="${key}"><option value="">—</option>${[1,2,3,4,5].map(n=>`<option>${n}</option>`).join("")}</select>`).join("")}</div><button class="btn ghost" style="margin-top:8px" onclick="saveVote('${key}')">Guardar valoración</button></div>`}
+async function saveVote(target){if(!current.submitted||target===userKey())return;const sels=[...document.querySelectorAll(`select[data-target="${target}"]`)];if(sels.some(s=>!s.value)){alert("Valora los cinco aspectos.");return}const vote={voterGroup:current.group,voter:userKey(),updatedAt:Date.now()};sels.forEach(s=>vote[s.dataset.k]=Number(s.value));await db.ref(`${ROOT}/votos/${target}/${userKey()}`).set(vote);alert("Valoración guardada.");renderGallery();renderRanking()}
+async function renderRanking(){const out=document.getElementById("rankingList");if(!Object.keys(submissions).length){out.innerHTML='<p>Aún no hay propuestas entregadas.</p>';return}const rows=[];for(const [key,p] of Object.entries(submissions)){const votes=await loadVotesFor(key),av=avgVotes(votes);rows.push({p,av,n:Object.keys(votes).length})}rows.sort((a,b)=>(b.av||0)-(a.av||0));out.innerHTML=rows.map((r,i)=>`<div class="rank">${i+1}. ${esc(r.p.title)} — ${r.av?r.av.toFixed(2)+"/5":"sin votos"} (${r.n})</div>`).join("")}
+loadRosters();listenData();
+</script>
+</body></html>
