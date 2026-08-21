@@ -1,0 +1,1 @@
+Panel profesor: control de alumnos, entregas y notas por criterios. Pendiente de conexión completa con todas las rutas de Firebase de cada tarea.
