@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expediente de Verificación — Mitos de la Actividad Física</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFF; --card:#F7F7F7; --ink:#1A1A1A; --ink-soft:#6B6B6B;
+  --mito:#B23A2E; --mito-bg:#F4E1DD; --realidad:#1F7A4D; --realidad-bg:#DCEDE1;
+  --warn:#C98A22; --line:#DADADA; --red:#DC0614;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+.brandbar{background:#FFFFFF;border-bottom:3px solid #DC0614;padding:9px 20px;display:flex;align-items:center;}
+.brandbar img{height:26px;display:block;}
+.wrap{max-width:900px;margin:0 auto;padding:26px 20px 80px;}
+.hidden{display:none !important;}
+
+/* Role switcher */
+.roleBar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px;}
+.roleBtn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.5px;padding:7px 12px;border:2px solid var(--ink);background:transparent;cursor:pointer;text-transform:uppercase;}
+.roleBtn.on{background:var(--red);color:#fff;border-color:var(--red);}
+
+/* Masthead */
+.masthead{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;}
+.masthead h1{font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:clamp(26px,5.5vw,42px);line-height:.95;margin:0;text-transform:uppercase;}
+.masthead .sub{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);letter-spacing:1px;margin-top:6px;}
+.nameplate{display:flex;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.nameplate label{display:block;color:var(--ink-soft);margin-bottom:4px;letter-spacing:.5px;}
+.nameplate select,.nameplate input{font-family:'JetBrains Mono',monospace;font-size:13px;padding:7px 10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);}
+
+/* Progress + tabs */
+.progress{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.progress .dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;background:var(--card);}
+.progress .dot.done{background:var(--realidad);border-color:var(--realidad);color:#fff;}
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+.tab{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.5px;padding:8px 12px;border:2px solid var(--ink);background:transparent;cursor:pointer;color:var(--ink);}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red);}
+
+.panel{display:none;}
+.panel.active{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:2px solid var(--ink);padding:20px;margin-bottom:16px;position:relative;}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--ink-soft);text-transform:uppercase;margin-bottom:6px;}
+.card h2{font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:24px;text-transform:uppercase;margin:0 0 12px;}
+.mr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+@media(max-width:600px){.mr-grid{grid-template-columns:1fr;}}
+.mr-box{padding:14px;border:2px solid;}
+.mr-box.mito{background:var(--mito-bg);border-color:var(--mito);}
+.mr-box.realidad{background:var(--realidad-bg);border-color:var(--realidad);}
+.mr-box .tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:block;}
+.mr-box.mito .tag{color:var(--mito);} .mr-box.realidad .tag{color:var(--realidad);}
+.mr-box p{margin:0;font-size:14.5px;line-height:1.45;}
+.scenario{background:#fff;border:2px dashed var(--ink);padding:16px;margin-bottom:14px;}
+.scenario .tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--warn);text-transform:uppercase;display:block;margin-bottom:8px;}
+.scenario p{margin:0;font-size:15px;line-height:1.5;font-weight:500;}
+textarea{width:100%;min-height:150px;font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.5;padding:14px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);resize:vertical;}
+textarea:focus{outline:3px solid var(--warn);outline-offset:0;}
+.meta-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);}
+.counter.ok{color:var(--realidad);font-weight:600;}
+.stamp{position:absolute;top:18px;right:18px;font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:14px;letter-spacing:1px;color:var(--realidad);border:3px solid var(--realidad);border-radius:50%;width:74px;height:74px;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-12deg) scale(0);opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;pointer-events:none;text-transform:uppercase;line-height:1.1;}
+.stamp.show{transform:rotate(-12deg) scale(1);opacity:.9;}
+.stepnav{display:flex;justify-content:space-between;margin-top:6px;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.5px;padding:11px 18px;border:2px solid var(--red);background:var(--red);color:#fff;cursor:pointer;}
+.btn.ghost{background:transparent;color:var(--ink);}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.rubric-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center;}
+.rubric-row:last-child{border-bottom:none;}
+.rubric-row .desc{font-size:13.5px;line-height:1.4;}
+.rubric-row .desc b{display:block;font-size:12.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:2px;font-family:'JetBrains Mono',monospace;}
+.rubric-row .motivo{font-size:12px;color:var(--ink-soft);margin-top:3px;font-style:italic;}
+.scale{display:flex;gap:6px;}
+.scale button{width:36px;height:36px;border:2px solid var(--ink);background:var(--paper);font-family:'JetBrains Mono',monospace;font-weight:600;cursor:pointer;}
+.scale button.sel{background:var(--red);color:#fff;border-color:var(--red);}
+.final-score{margin-top:14px;padding:14px 16px;background:var(--red);color:#fff;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;}
+.final-score .num{font-family:'Big Shoulders Display',sans-serif;font-size:30px;font-weight:800;}
+.footer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.hint{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.5;}
+
+/* Teacher area */
+.gate{max-width:320px;margin:60px auto;text-align:center;}
+.gate input{width:100%;padding:11px;font-family:'JetBrains Mono',monospace;border:2px solid var(--ink);background:var(--card);margin-bottom:10px;}
+.subtabs{display:flex;gap:6px;margin-bottom:16px;}
+.subtab{font-family:'JetBrains Mono',monospace;font-size:12px;padding:7px 12px;border:2px solid var(--ink);background:transparent;cursor:pointer;}
+.subtab.on{background:var(--red);color:#fff;border-color:var(--red);}
+.groupBlock{margin-bottom:18px;}
+.groupBlock h3{font-family:'Big Shoulders Display',sans-serif;font-size:20px;text-transform:uppercase;margin:0 0 8px;}
+.roster-import{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;}
+.roster-import textarea{min-height:110px;flex:1;font-family:'JetBrains Mono',monospace;font-size:13px;}
+.roster-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 9px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;gap:6px;}
+.chip button{border:none;background:none;color:var(--mito);cursor:pointer;font-weight:700;}
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.toolbar .count{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);margin-left:auto;}
+.entrega-card{background:var(--card);border:2px solid var(--ink);margin-bottom:12px;}
+.rowhead{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;cursor:pointer;gap:10px;flex-wrap:wrap;}
+.rowhead .who b{font-family:'Big Shoulders Display',sans-serif;font-size:18px;text-transform:uppercase;}
+.rowhead .who span{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);}
+.badge{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 10px;border:2px solid;letter-spacing:.5px;text-transform:uppercase;}
+.badge.pendiente{border-color:var(--warn);color:var(--warn);}
+.badge.falta{border-color:var(--mito);color:var(--mito);}
+.badge.evaluado{border-color:var(--realidad);color:var(--realidad);background:var(--realidad-bg);}
+.body2{display:none;padding:0 16px 16px;border-top:2px solid var(--line);}
+.body2.open{display:block;}
+.answer{margin:12px 0;}
+.answer .tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px;}
+.answer p{margin:0;font-size:14px;line-height:1.5;white-space:pre-wrap;background:#fff;border:1px solid var(--line);padding:10px;}
+textarea.comentario{width:100%;min-height:56px;font-family:'Inter',sans-serif;font-size:13.5px;padding:10px;border:2px solid var(--ink);background:#fff;margin-top:10px;}
+.spinner{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--warn);}
+</style>
+</head>
+<body>
+<div class="brandbar">
+  <img src="data:image/png;base64,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" alt="Salesianos Triana">
+</div>
+<div class="wrap">
+
+  <div class="roleBar">
+    <button class="roleBtn on" id="roleAlumno">Soy alumno/a</button>
+    <button class="roleBtn" id="roleProfe">Área del profesor</button>
+  </div>
+
+  <!-- ALUMNO -->
+  <div id="viewAlumno">
+    <div class="masthead">
+      <div>
+        <h1>Expediente de<br>Verificación</h1>
+        <div class="sub">MITOS DE LA ACTIVIDAD FÍSICA · CASO PERSONAL</div>
+      </div>
+      <div class="nameplate">
+        <div><label>Curso y grupo</label>
+          <select id="studentGroup">
+            <option value="">—</option>
+            <option value="4A">4º ESO A</option>
+            <option value="4B">4º ESO B</option>
+            <option value="4C">4º ESO C</option>
+          </select>
+        </div>
+        <div><label>Alumno/a</label>
+          <select id="studentNameSelect" style="min-width:170px;"><option value="">Elige tu grupo primero</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="tabs" id="tabs"></div>
+    <div id="panels"></div>
+  </div>
+
+  <!-- PROFESOR -->
+  <div id="viewProfe" class="hidden">
+    <div id="gate" class="gate">
+      <h1 style="font-family:'Big Shoulders Display',sans-serif;font-size:26px;text-transform:uppercase;">Área del profesor</h1>
+      <input type="password" id="pass" placeholder="Contraseña">
+      <button class="btn" id="enterBtn" style="width:100%;">Entrar</button>
+      <p id="gateMsg" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mito);"></p>
+    </div>
+    <div id="profeMain" class="hidden">
+      <div class="subtabs">
+        <button class="subtab on" id="subtabListas">Listas</button>
+        <button class="subtab" id="subtabEntregas">Entregas</button>
+      </div>
+      <div id="listasView"></div>
+      <div id="entregasView" class="hidden">
+        <div class="toolbar">
+          <button class="btn" id="evalAllBtn">Evaluar con IA todos los pendientes</button>
+          <button class="btn ghost" id="csvBtn">Exportar CSV</button>
+          <span class="count" id="countInfo"></span>
+        </div>
+        <div id="list"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+// ── CONFIGURACIÓN ─────────────────────────────────────────────
+// Pega aquí la configuración de Firebase de tu proyecto (la misma que
+// usas en EduFísica Pro / Entregas EF). Si la dejas vacía, el modo
+// alumno funciona en local (sin envío) y el área del profesor no carga datos.
+const firebaseConfig = {
+  apiKey: "AIzaSyCsPi1YtKxDyeVKTvx2y2z_b48qluqpJAU",
+  authDomain: "tareas-alumnado2y4eso.firebaseapp.com",
+  databaseURL: "https://tareas-alumnado2y4eso-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "tareas-alumnado2y4eso",
+};
+const ANIO = "2026-2027";
+const RUTA_ENTREGAS = `expedientes_mitos/${ANIO}`;
+const RUTA_LISTAS = `listas_grupos`;
+const TEACHER_PASS = "triana2027";
+const GRUPOS = ["4A","4B","4C"];
+const GRUPO_LABELS = {"4A":"4º ESO A","4B":"4º ESO B","4C":"4º ESO C"};
+
+let db = null;
+if (firebaseConfig.apiKey) {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    firebase.auth().signInAnonymously().catch(e=>console.warn(e));
+  } catch(e){ console.warn("Firebase no disponible.", e); }
+}
+
+function slug(str){
+  return (str||"").toString().trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"") || "alumno";
+}
+
+/* ============ ROLE SWITCH ============ */
+document.getElementById("roleAlumno").onclick = ()=>{
+  document.getElementById("roleAlumno").classList.add("on");
+  document.getElementById("roleProfe").classList.remove("on");
+  document.getElementById("viewAlumno").classList.remove("hidden");
+  document.getElementById("viewProfe").classList.add("hidden");
+};
+document.getElementById("roleProfe").onclick = ()=>{
+  document.getElementById("roleProfe").classList.add("on");
+  document.getElementById("roleAlumno").classList.remove("on");
+  document.getElementById("viewProfe").classList.remove("hidden");
+  document.getElementById("viewAlumno").classList.add("hidden");
+};
+
+/* ============ ROSTERS (listas) ============ */
+let rosters = {}; GRUPOS.forEach(g=> rosters[g]=[]);
+
+function loadRostersForStudentView(){
+  if(!db) return;
+  GRUPOS.forEach(g=>{
+    db.ref(`${RUTA_LISTAS}/${g}`).on("value", snap=>{
+      rosters[g] = snap.val() || [];
+      if(document.getElementById("studentGroup").value === g) fillNameSelect(g);
+      if(!document.getElementById("viewProfe").classList.contains("hidden")) renderListas();
+      renderEntregas();
+    });
+  });
+}
+
+function fillNameSelect(g){
+  const sel = document.getElementById("studentNameSelect");
+  const list = rosters[g] || [];
+  if(list.length===0){
+    sel.innerHTML = `<option value="">(sin lista — escribe tu nombre al profesor)</option>`;
+    return;
+  }
+  sel.innerHTML = `<option value="">Elige tu nombre</option>` + list.map(n=>`<option value="${n}">${n}</option>`).join("");
+}
+
+document.getElementById("studentGroup").addEventListener("change", e=> fillNameSelect(e.target.value));
+
+/* ============ ESTACIONES (contenido) ============ */
+const STATIONS = [
+  {id:1, titulo:"Hidratación y sudor",
+   mito:"Sudar más significa que estás quemando más grasa, y beber agua durante el ejercicio provoca calambres.",
+   realidad:"El sudor es 99% agua y sales; su función es enfriar el cuerpo (termorregulación), no eliminar grasa. La deshidratación, no el agua, es una causa principal de fatiga y calambres.",
+   escenarioTag:"Situación real",
+   escenario:"Tu compañero/a de equipo se pone una sudadera por encima de la ropa de deporte en pleno agosto porque quiere \"sudar más\" y bajar de peso antes de una prueba de resistencia. Escríbele el mensaje de WhatsApp que le mandarías: explícale qué le puede pasar de verdad y qué le propones hacer en su lugar.",
+   minChars:280},
+  {id:2, titulo:"Fads de fitness y redes",
+   mito:"Se puede perder grasa localizada haciendo ejercicios de una sola zona, y \"si no duele, no sirve\".",
+   realidad:"El cuerpo moviliza grasa de forma sistémica, no por zonas. El dolor agudo es una señal de alarma de posible lesión; la fatiga muscular normal es distinta y no hay que perseguir el dolor.",
+   escenarioTag:"Situación real",
+   escenario:"Piensa en un vídeo o reto de fitness real que hayas visto en TikTok o Instagram y que te pareciera exagerado o sospechoso. Descríbelo brevemente (de qué iba) y explica, con al menos dos argumentos de esta unidad, por qué no deberías seguirlo tal cual.",
+   minChars:280},
+  {id:3, titulo:"Suplementos y \"soluciones rápidas\"",
+   mito:"Sin batidos de proteína o pre-workout no se gana músculo ni se rinde en el deporte.",
+   realidad:"Un adolescente en crecimiento obtiene la proteína necesaria de una dieta equilibrada. Muchos pre-workout no están regulados y contienen dosis de cafeína peligrosas para un corazón joven.",
+   escenarioTag:"Situación real",
+   escenario:"Un familiar te regala un bote de proteína en polvo \"para que ganes músculo más rápido\". Escribe la conversación que tendrías con él o ella: explícale con respeto por qué no lo necesitas a tu edad y propónle dos alimentos reales que cumplen la misma función.",
+   minChars:280},
+  {id:4, titulo:"Postura y técnica vs. carga",
+   mito:"Cuanto más peso levantes, mejor y más rápido progresas, aunque la técnica no sea correcta.",
+   realidad:"La biomecánica protege las articulaciones. Levantar carga excesiva con mala técnica (espalda encorvada, rodillas hacia dentro) daña cartílagos y tendones a largo plazo, sobre todo en un cuerpo en desarrollo.",
+   escenarioTag:"Situación real",
+   escenario:"Estás en un gimnasio o pista y ves a alguien haciendo sentadillas con muy mala técnica (talones despegados, espalda encorvada) para poder levantar más peso. ¿Le dirías algo? Si sí, ¿qué le dirías exactamente y cómo? Si no, explica por qué no y qué harías en su lugar.",
+   minChars:280},
+  {id:5, titulo:"Imagen corporal y marketing",
+   mito:"El cuerpo \"fitness\" que se ve en redes es un estándar realista y alcanzable para cualquiera que se esfuerce.",
+   realidad:"Ese modelo suele responder a estrategias de venta (filtros, edición, casos extremos), no a la fisiología de la mayoría. La presión por encajar en él es una barrera real para que muchos adolescentes hagan deporte.",
+   escenarioTag:"Situación real",
+   escenario:"Imagina que gestionas una cuenta de Instagram para desmontar mitos de fitness entre adolescentes. Escribe el texto de una publicación (mínimo 3 frases) que desmonte UN estereotipo corporal concreto que hayas visto en redes, usando argumentos de esta unidad.",
+   minChars:220}
+];
+const CRITERIA = [
+  {key:"argumentacion", label:"Argumentación científica", desc:"¿Usa correctamente los conceptos de la unidad (termorregulación, biomecánica, reducción localizada, etc.)?"},
+  {key:"aplicacion", label:"Aplicación personal", desc:"¿La respuesta parte de una situación concreta y creíble, no de un consejo genérico?"},
+  {key:"redaccion", label:"Redacción y coherencia", desc:"¿Se entiende bien, tiene hilo y está organizada?"}
+];
+
+/* ============ ALUMNO: estado local ============ */
+const STORAGE_KEY = "expediente_mitos_4eso_v2";
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+state.answers = state.answers || {};
+state.rubric = state.rubric || {};
+let activeTab = "1";
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function isDone(st){ return (state.answers[st.id]||"").trim().length >= st.minChars; }
+
+function renderTabs(){
+  const tabsEl = document.getElementById("tabs"); tabsEl.innerHTML = "";
+  STATIONS.forEach(st=>{
+    const b = document.createElement("button");
+    b.className = "tab" + (activeTab==String(st.id)?" active":"");
+    b.textContent = "EXPEDIENTE 0"+st.id;
+    b.onclick = ()=>{ activeTab=String(st.id); renderAll(); };
+    tabsEl.appendChild(b);
+  });
+  const b2 = document.createElement("button");
+  b2.className = "tab" + (activeTab=="cierre"?" active":"");
+  b2.textContent = "CIERRE";
+  b2.onclick = ()=>{ activeTab="cierre"; renderAll(); };
+  tabsEl.appendChild(b2);
+}
+function renderProgress(){
+  const p = document.getElementById("progress"); p.innerHTML = "";
+  STATIONS.forEach(st=>{ const d=document.createElement("div"); d.className="dot"+(isDone(st)?" done":""); d.textContent=st.id; p.appendChild(d); });
+  const cd = document.createElement("div"); cd.className="dot"+(STATIONS.every(isDone)?" done":""); cd.textContent="✓"; p.appendChild(cd);
+}
+function stationPanel(st){
+  const div = document.createElement("div");
+  div.className = "panel" + (activeTab==String(st.id)?" active":"");
+  const val = state.answers[st.id] || "";
+  const len = val.trim().length;
+  const done = len >= st.minChars;
+  div.innerHTML = `
+    <div class="card">
+      <div class="stamp ${done?'show':''}">CASO<br>VERIFICADO</div>
+      <div class="eyebrow">Expediente 0${st.id} · Mito / Realidad</div>
+      <h2>${st.titulo}</h2>
+      <div class="mr-grid">
+        <div class="mr-box mito"><span class="tag">✕ El mito</span><p>${st.mito}</p></div>
+        <div class="mr-box realidad"><span class="tag">✓ La realidad</span><p>${st.realidad}</p></div>
+      </div>
+      <div class="scenario"><span class="tag">${st.escenarioTag}</span><p>${st.escenario}</p></div>
+      <textarea id="ta-${st.id}" placeholder="Escribe tu respuesta con tus propias palabras y con detalles concretos...">${val}</textarea>
+      <div class="meta-row">
+        <span>Mínimo ${st.minChars} caracteres para cerrar el caso</span>
+        <span class="counter ${done?'ok':''}" id="counter-${st.id}">${len} / ${st.minChars}</span>
+      </div>
+    </div>
+    <div class="stepnav">
+      <button class="btn ghost" data-prev="${st.id}">← Anterior</button>
+      <button class="btn" data-next="${st.id}">Siguiente →</button>
+    </div>`;
+  return div;
+}
+function cierrePanel(){
+  const div = document.createElement("div");
+  div.className = "panel" + (activeTab=="cierre"?" active":"");
+  let rows = CRITERIA.map(c=>{
+    const sel = state.rubric[c.key];
+    const buttons = [0,1,2].map(v=>`<button data-crit="${c.key}" data-val="${v}" class="${sel===v?'sel':''}">${v}</button>`).join("");
+    return `<div class="rubric-row"><div class="desc"><b>${c.label}</b>${c.desc}</div><div class="scale">${buttons}</div></div>`;
+  }).join("");
+  const vals = CRITERIA.map(c=>state.rubric[c.key]).filter(v=>v!==undefined);
+  const avg = vals.length===3 ? (vals.reduce((a,b)=>a+b,0)/3).toFixed(2) : "—";
+  div.innerHTML = `
+    <div class="card">
+      <div class="eyebrow">Cierre del expediente · Autoevaluación</div>
+      <h2>Antes de entregar</h2>
+      <p style="font-size:14px;line-height:1.5;margin-top:-6px;">Puntúa tu propio trabajo de 0 a 2 en cada criterio, con honestidad.</p>
+      ${rows}
+      <div class="final-score"><span>NOTA MEDIA (autoevaluación)</span><span class="num">${avg}</span></div>
+    </div>
+    <div class="footer-actions">
+      <button class="btn" id="submitBtn">Enviar expediente al profesor</button>
+      <button class="btn ghost" id="downloadBtn">Descargar informe (.txt)</button>
+      <button class="btn ghost" id="printBtn">Imprimir / PDF</button>
+    </div>
+    <p class="hint" id="submitStatus">${state.enviado ? `Enviado el ${new Date(state.enviado).toLocaleString('es-ES')}. Puedes reenviarlo si corriges algo.` : "Elige tu grupo y tu nombre arriba y pulsa \"Enviar expediente\" cuando termines."}</p>`;
+  return div;
+}
+function renderPanels(){
+  const cont = document.getElementById("panels"); cont.innerHTML = "";
+  STATIONS.forEach(st=> cont.appendChild(stationPanel(st)));
+  cont.appendChild(cierrePanel());
+  STATIONS.forEach(st=>{
+    const ta = document.getElementById("ta-"+st.id);
+    ta.addEventListener("input", e=>{
+      state.answers[st.id] = e.target.value; save();
+      const len = e.target.value.trim().length;
+      const c = document.getElementById("counter-"+st.id);
+      c.textContent = `${len} / ${st.minChars}`; c.classList.toggle("ok", len>=st.minChars);
+      e.target.closest(".card").querySelector(".stamp").classList.toggle("show", len>=st.minChars);
+      renderProgress();
+    });
+  });
+  cont.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>{ const id=parseInt(b.dataset.next); activeTab = id<5?String(id+1):"cierre"; renderAll(); });
+  cont.querySelectorAll("[data-prev]").forEach(b=>b.onclick=()=>{ const id=parseInt(b.dataset.prev); activeTab = id>1?String(id-1):"1"; renderAll(); });
+  cont.querySelectorAll("[data-crit]").forEach(b=>b.onclick=()=>{ state.rubric[b.dataset.crit]=parseInt(b.dataset.val); save(); renderAll(); });
+  const dl = document.getElementById("downloadBtn"); if(dl) dl.onclick = downloadReport;
+  const pr = document.getElementById("printBtn"); if(pr) pr.onclick = ()=>window.print();
+  const sb = document.getElementById("submitBtn"); if(sb) sb.onclick = submitToTeacher;
+}
+function downloadReport(){
+  const nombre = document.getElementById("studentNameSelect").value;
+  let out = `EXPEDIENTE DE VERIFICACIÓN — MITOS DE LA ACTIVIDAD FÍSICA\nAlumno/a: ${nombre}\nFecha: ${new Date().toLocaleDateString('es-ES')}\n${"=".repeat(60)}\n\n`;
+  STATIONS.forEach(st=>{ out += `EXPEDIENTE ${st.id} — ${st.titulo.toUpperCase()}\nSituación: ${st.escenario}\n\nRespuesta:\n${(state.answers[st.id]||"(sin responder)")}\n\n${"-".repeat(60)}\n\n`; });
+  out += `AUTOEVALUACIÓN\n`;
+  let sum=0,count=0;
+  CRITERIA.forEach(c=>{ const v=state.rubric[c.key]; if(v!==undefined){sum+=v;count++;} out += `- ${c.label}: ${v!==undefined?v:"—"} / 2\n`; });
+  out += `Nota media: ${count===3?(sum/3).toFixed(2):"—"}\n`;
+  const blob = new Blob([out], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `expediente_mitos_${slug(nombre)}.txt`; a.click();
+}
+async function submitToTeacher(){
+  const grupo = document.getElementById("studentGroup").value;
+  const nombre = document.getElementById("studentNameSelect").value;
+  const statusEl = document.getElementById("submitStatus");
+  if(!grupo || !nombre){ statusEl.textContent = "Elige tu grupo y tu nombre arriba antes de enviar."; statusEl.style.color = "var(--mito)"; return; }
+  if(!db){ statusEl.textContent = "Esta copia no está conectada al profesor: descarga el informe y entrégalo por Classroom."; statusEl.style.color = "var(--mito)"; return; }
+  const payload = { nombre, grupo, respuestas: state.answers, autoevaluacion: state.rubric, timestamp: Date.now() };
+  try{
+    await db.ref(`${RUTA_ENTREGAS}/${slug(grupo)}_${slug(nombre)}`).set(payload);
+    state.enviado = payload.timestamp; save();
+    statusEl.textContent = `Enviado correctamente el ${new Date(payload.timestamp).toLocaleString('es-ES')}.`; statusEl.style.color = "var(--realidad)";
+  }catch(e){ statusEl.textContent = "No se ha podido enviar. Descarga el informe como copia de seguridad."; statusEl.style.color = "var(--mito)"; console.error(e); }
+}
+function renderAll(){ renderTabs(); renderProgress(); renderPanels(); }
+renderAll();
+loadRostersForStudentView();
+
+/* ============ PROFESOR: gate ============ */
+document.getElementById("enterBtn").onclick = enterProfe;
+document.getElementById("pass").addEventListener("keydown", e=>{ if(e.key==="Enter") enterProfe(); });
+function enterProfe(){
+  if(document.getElementById("pass").value !== TEACHER_PASS){
+    document.getElementById("gateMsg").textContent = "Contraseña incorrecta."; return;
+  }
+  document.getElementById("gate").classList.add("hidden");
+  document.getElementById("profeMain").classList.remove("hidden");
+  renderListas(); renderEntregas();
+}
+document.getElementById("subtabListas").onclick = ()=>{
+  document.getElementById("subtabListas").classList.add("on");
+  document.getElementById("subtabEntregas").classList.remove("on");
+  document.getElementById("listasView").classList.remove("hidden");
+  document.getElementById("entregasView").classList.add("hidden");
+};
+document.getElementById("subtabEntregas").onclick = ()=>{
+  document.getElementById("subtabEntregas").classList.add("on");
+  document.getElementById("subtabListas").classList.remove("on");
+  document.getElementById("entregasView").classList.remove("hidden");
+  document.getElementById("listasView").classList.add("hidden");
+};
+
+/* ============ PROFESOR: listas ============ */
+function parseNombres(texto){
+  return texto.split("\n").map(l=>{
+    // admite pegado de Excel/CSV: si hay tabulador o coma, se queda con el primer campo no vacío
+    const partes = l.split(/\t|;|,/).map(p=>p.trim()).filter(Boolean);
+    return partes[0] || "";
+  }).map(n=>n.trim()).filter(Boolean);
+}
+function renderListas(){
+  const cont = document.getElementById("listasView"); cont.innerHTML = "";
+  GRUPOS.forEach(g=>{
+    const block = document.createElement("div");
+    block.className = "groupBlock";
+    const actuales = rosters[g] || [];
+    block.innerHTML = `
+      <h3>${GRUPO_LABELS[g]}</h3>
+      <div class="roster-import">
+        <textarea id="import-${g}" placeholder="Pega aquí un nombre por línea (vale copiar y pegar una columna de Excel/Séneca)"></textarea>
+        <button class="btn" data-import="${g}">Guardar lista</button>
+      </div>
+      <div class="roster-list" id="chips-${g}">
+        ${actuales.map(n=>`<span class="chip">${n}<button data-remove="${g}::${n}">×</button></span>`).join("") || `<span class="hint">Sin alumnado importado todavía.</span>`}
+      </div>`;
+    cont.appendChild(block);
+  });
+  cont.querySelectorAll("[data-import]").forEach(b=>b.onclick=async ()=>{
+    const g = b.dataset.import;
+    const nuevos = parseNombres(document.getElementById("import-"+g).value);
+    const actuales = rosters[g] || [];
+    const combinado = Array.from(new Set([...actuales, ...nuevos])).sort((a,b)=>a.localeCompare(b,'es'));
+    if(db) await db.ref(`${RUTA_LISTAS}/${g}`).set(combinado);
+    rosters[g] = combinado;
+    document.getElementById("import-"+g).value = "";
+    renderListas();
+  });
+  cont.querySelectorAll("[data-remove]").forEach(b=>b.onclick=async ()=>{
+    const [g, nombre] = b.dataset.remove.split("::");
+    const filtrado = (rosters[g]||[]).filter(n=>n!==nombre);
+    if(db) await db.ref(`${RUTA_LISTAS}/${g}`).set(filtrado);
+    rosters[g] = filtrado;
+    renderListas();
+  });
+}
+
+/* ============ PROFESOR: entregas ============ */
+let records = {};
+if(db){
+  db.ref(RUTA_ENTREGAS).on("value", snap=>{ records = snap.val() || {}; renderEntregas(); });
+}
+const STATION_TITLES = Object.fromEntries(STATIONS.map(s=>[s.id, s.titulo]));
+
+function renderEntregas(){
+  const list = document.getElementById("list");
+  if(!list) return;
+  list.innerHTML = "";
+
+  // Combina roster + entregas: primero pendientes por falta de entrega, luego entregadas
+  let pendientesSinEnviar = [];
+  GRUPOS.forEach(g=>{
+    (rosters[g]||[]).forEach(nombre=>{
+      const key = `${slug(g)}_${slug(nombre)}`;
+      if(!records[key]) pendientesSinEnviar.push({key, nombre, grupo:g});
+    });
+  });
+
+  const entregadas = Object.keys(records).sort((a,b)=> (records[b].timestamp||0)-(records[a].timestamp||0));
+  const evaluados = entregadas.filter(k=>records[k].evaluacion).length;
+  document.getElementById("countInfo").textContent = `${entregadas.length} entregados · ${evaluados} evaluados · ${pendientesSinEnviar.length} sin entregar`;
+
+  pendientesSinEnviar.forEach(p=>{
+    const card = document.createElement("div");
+    card.className = "entrega-card";
+    card.innerHTML = `<div class="rowhead"><div class="who"><b>${p.nombre}</b><span>${GRUPO_LABELS[p.grupo]||p.grupo} · sin enviar</span></div><span class="badge falta">Sin entregar</span></div>`;
+    list.appendChild(card);
+  });
+
+  entregadas.forEach(key=>{
+    const r = records[key];
+    const done = !!r.evaluacion;
+    const card = document.createElement("div");
+    card.className = "entrega-card";
+    card.innerHTML = `
+      <div class="rowhead" data-key="${key}">
+        <div class="who"><b>${r.nombre}</b><span>${GRUPO_LABELS[r.grupo]||r.grupo} · ${new Date(r.timestamp).toLocaleString('es-ES')}</span></div>
+        <span class="badge ${done?'evaluado':'pendiente'}">${done?`Nota: ${r.evaluacion.notaMedia}`:'Pendiente de evaluar'}</span>
+      </div>
+      <div class="body2" id="body-${key}"></div>`;
+    card.querySelector(".rowhead").onclick = ()=> toggleBody(key);
+    list.appendChild(card);
+  });
+}
+function toggleBody(key){
+  const body = document.getElementById("body-"+key);
+  if(body.classList.contains("open")){ body.classList.remove("open"); return; }
+  body.classList.add("open"); renderBody(key);
+}
+function calcAvg(criterios){
+  const vals = CRITERIA.map(c=>criterios[c.key]?.nota).filter(v=>v!==undefined && v!==null);
+  if(vals.length!==3) return "—";
+  return (vals.reduce((a,b)=>a+b,0)/3).toFixed(2);
+}
+function ensureEval(r){ if(!r.evaluacion) r.evaluacion = {criterios:{}, comentario:""}; }
+function renderBody(key){
+  const r = records[key];
+  const body = document.getElementById("body-"+key);
+  const answersHtml = Object.keys(r.respuestas||{}).sort().map(id=>`
+    <div class="answer"><span class="tag">Expediente ${id} — ${STATION_TITLES[id]||''}</span><p>${(r.respuestas[id]||'').replace(/</g,'&lt;')}</p></div>`).join("");
+  const ev = r.evaluacion || {criterios:{}, comentario:""};
+  const rubricHtml = CRITERIA.map(c=>{
+    const crit = ev.criterios[c.key] || {};
+    const buttons = [0,1,2].map(v=>`<button data-key="${key}" data-crit="${c.key}" data-val="${v}" class="${crit.nota===v?'sel':''}">${v}</button>`).join("");
+    return `<div class="rubric-row"><div class="desc"><b>${c.label}</b>${c.desc}${crit.motivo?`<div class="motivo">IA: "${crit.motivo}"</div>`:""}</div><div class="scale">${buttons}</div></div>`;
+  }).join("");
+  body.innerHTML = `
+    ${answersHtml}
+    <div style="margin-top:14px;">${rubricHtml}</div>
+    <textarea class="comentario" id="comentario-${key}" placeholder="Comentario para el alumno (opcional)">${ev.comentario||""}</textarea>
+    <div class="final-score"><span>NOTA MEDIA</span><span class="num" id="avg-${key}">${calcAvg(ev.criterios)}</span></div>
+    <div class="footer-actions">
+      <button class="btn" data-eval="${key}">Evaluar con IA</button>
+      <button class="btn ghost" data-save="${key}">Guardar nota final</button>
+      <span class="spinner" id="spinner-${key}"></span>
+    </div>`;
+  body.querySelectorAll("[data-crit]").forEach(b=>b.onclick=()=>{
+    ensureEval(r);
+    r.evaluacion.criterios[b.dataset.crit] = {...(r.evaluacion.criterios[b.dataset.crit]||{}), nota: parseInt(b.dataset.val)};
+    r.evaluacion.notaMedia = calcAvg(r.evaluacion.criterios);
+    renderBody(key);
+  });
+  body.querySelector(`[data-eval="${key}"]`).onclick = ()=> evaluateWithAI(key);
+  body.querySelector(`[data-save="${key}"]`).onclick = ()=> saveFinal(key);
+}
+async function evaluateWithAI(key){
+  const r = records[key];
+  const spinner = document.getElementById("spinner-"+key);
+  if(spinner) spinner.textContent = "Evaluando...";
+  const respuestasTexto = Object.keys(r.respuestas||{}).sort().map(id=>`Expediente ${id} (${STATION_TITLES[id]||''}):\n${r.respuestas[id]}`).join("\n\n");
+  const criteriosTexto = CRITERIA.map(c=>`- ${c.key}: ${c.label} — ${c.desc}`).join("\n");
+  const prompt = `Eres un profesor de Educación Física de 4º ESO corrigiendo un trabajo escrito sobre mitos de la actividad física. Evalúa las siguientes respuestas de un alumno/a según esta rúbrica de 3 criterios, cada uno puntuado de 0 a 2 (0=no cumple, 1=cumple parcialmente, 2=cumple bien):
+
+${criteriosTexto}
+
+Respuestas del alumno/a:
+${respuestasTexto}
+
+Devuelve SOLO un JSON válido, sin texto adicional ni bloques de código, con esta forma exacta:
+{"argumentacion":{"nota":0,"motivo":"..."},"aplicacion":{"nota":0,"motivo":"..."},"redaccion":{"nota":0,"motivo":"..."},"comentarioGeneral":"..."}
+Cada "motivo" debe tener máximo 15 palabras. El "comentarioGeneral" debe tener máximo 30 palabras, en tono constructivo y dirigido al alumno/a.`;
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:500, messages:[{role:"user", content:prompt}] })
+    });
+    const data = await response.json();
+    const textBlock = data.content.find(b=>b.type==="text");
+    const parsed = JSON.parse(textBlock.text.replace(/```json|```/g,"").trim());
+    ensureEval(r);
+    r.evaluacion.criterios = {
+      argumentacion:{nota:parsed.argumentacion.nota, motivo:parsed.argumentacion.motivo},
+      aplicacion:{nota:parsed.aplicacion.nota, motivo:parsed.aplicacion.motivo},
+      redaccion:{nota:parsed.redaccion.nota, motivo:parsed.redaccion.motivo}
+    };
+    r.evaluacion.notaMedia = calcAvg(r.evaluacion.criterios);
+    r.evaluacion.comentario = parsed.comentarioGeneral || "";
+    if(spinner) spinner.textContent = "";
+    renderBody(key);
+  }catch(e){ console.error(e); if(spinner) spinner.textContent = "Error al evaluar, inténtalo de nuevo."; }
+}
+async function saveFinal(key){
+  const r = records[key];
+  ensureEval(r);
+  r.evaluacion.comentario = document.getElementById("comentario-"+key).value;
+  r.evaluacion.notaMedia = calcAvg(r.evaluacion.criterios);
+  r.evaluacion.fecha = Date.now();
+  if(db) await db.ref(`${RUTA_ENTREGAS}/${key}/evaluacion`).set(r.evaluacion);
+  renderEntregas();
+}
+document.getElementById("evalAllBtn").onclick = async ()=>{
+  const keys = Object.keys(records).filter(k=>!records[k].evaluacion);
+  for(const k of keys){ await evaluateWithAI(k); await saveFinal(k); }
+};
+document.getElementById("csvBtn").onclick = ()=>{
+  let rows = [["Nombre","Grupo","Argumentacion","Aplicacion","Redaccion","NotaMedia","Comentario","Estado"]];
+  GRUPOS.forEach(g=>{
+    (rosters[g]||[]).forEach(nombre=>{
+      const key = `${slug(g)}_${slug(nombre)}`;
+      const r = records[key];
+      if(!r){ rows.push([nombre, GRUPO_LABELS[g]||g, "","","","","","Sin entregar"]); return; }
+      const c = (r.evaluacion&&r.evaluacion.criterios) || {};
+      rows.push([nombre, GRUPO_LABELS[g]||g, c.argumentacion?.nota??"", c.aplicacion?.nota??"", c.redaccion?.nota??"",
+        r.evaluacion?.notaMedia??"", (r.evaluacion?.comentario||"").replace(/\n/g," "), r.evaluacion?"Evaluado":"Pendiente de evaluar"]);
+    });
+  });
+  const csv = rows.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "notas_expediente_mitos.csv"; a.click();
+};
+</script>
+</body>
+</html>
