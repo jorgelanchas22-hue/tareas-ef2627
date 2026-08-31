@@ -135,8 +135,7 @@ textarea.comentario{width:100%;min-height:56px;font-family:'Inter',sans-serif;fo
   <div id="viewProfe" class="hidden">
     <div id="gate" class="gate">
       <h1 style="font-family:'Big Shoulders Display',sans-serif;font-size:26px;text-transform:uppercase;">Área del profesor</h1>
-      <input type="password" id="pass" placeholder="Contraseña">
-      <button class="btn" id="enterBtn" style="width:100%;">Entrar</button>
+      <button class="btn" id="enterBtn" style="width:100%;">🔐 Entrar con Google</button>
       <p id="gateMsg" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mito);"></p>
     </div>
     <div id="profeMain" class="hidden">
@@ -165,7 +164,7 @@ const firebaseConfig = {
 const ANIO = "2026-2027";
 const RUTA_LISTAS = `listas_grupos`;
 const RUTA_ENTREGAS = `entregas_arbitraje_deportivo/${ANIO}`;
-const TEACHER_PASS = "triana2027";
+const AUTHORIZED_EMAIL = "jorge.lanchas@triana.salesianos.edu";
 const GRUPOS = ["4A","4B","4C"];
 const GRUPO_LABELS = {"4A":"4º ESO A","4B":"4º ESO B","4C":"4º ESO C"};
 
@@ -388,14 +387,24 @@ loadRostersForStudentView();
 
 /* ============ PROFESOR: gate ============ */
 document.getElementById("enterBtn").onclick = enterProfe;
-document.getElementById("pass").addEventListener("keydown", e=>{ if(e.key==="Enter") enterProfe(); });
 function enterProfe(){
-  if(document.getElementById("pass").value !== TEACHER_PASS){
-    document.getElementById("gateMsg").textContent = "Contraseña incorrecta."; return;
-  }
-  document.getElementById("gate").classList.add("hidden");
-  document.getElementById("profeMain").classList.remove("hidden");
-  renderEntregas();
+  const msg = document.getElementById("gateMsg");
+  msg.textContent = "Abriendo Google...";
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({prompt:"select_account"});
+  firebase.auth().signInWithPopup(provider).then(res=>{
+    const email = ((res.user && res.user.email) || "").toLowerCase();
+    if(email !== AUTHORIZED_EMAIL.toLowerCase()){
+      msg.textContent = "Esta cuenta no está autorizada.";
+      firebase.auth().signOut();
+      return;
+    }
+    document.getElementById("gate").classList.add("hidden");
+    document.getElementById("profeMain").classList.remove("hidden");
+    renderEntregas();
+  }).catch(e=>{
+    msg.textContent = (e && e.code === "auth/popup-closed-by-user") ? "Se cerró la ventana de Google." : "No se pudo iniciar sesión con Google.";
+  });
 }
 
 /* ============ PROFESOR: entregas ============ */
