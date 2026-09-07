@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Classroom 50 · Educación Física</title>
+<style>
+:root{--r:#dc0614;--ink:#171717;--soft:#666;--line:#ddd;--green:#137a4a;--blue:#174ea6}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:var(--ink);background:#fff}.wrap{max-width:1200px;margin:auto;padding:20px}.hero{border:3px solid #111;padding:18px;margin-bottom:18px;background:#fafafa}.hero h1{margin:0 0 8px}.hero p{line-height:1.5;margin:6px 0}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.btn{display:inline-block;border:2px solid #111;background:#111;color:#fff;text-decoration:none;padding:10px 13px;font-weight:800;cursor:pointer}.btn.red{background:var(--r);border-color:var(--r)}.btn.light{background:#fff;color:#111}.note{border-left:5px solid var(--blue);padding:11px 13px;background:#f3f7ff;margin:16px 0;line-height:1.45}.warning{border-left-color:#a96b00;background:#fff8e8}.course{border:3px solid #111;padding:14px;margin:18px 0}.course h2{margin:0 0 12px;border-bottom:3px solid var(--r);padding-bottom:8px}.eval{margin:18px 0}.eval h3{font-size:13px;text-transform:uppercase}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.task{border:2px solid #111;padding:12px;background:#fafafa}.task h4{margin:0 0 5px}.task small{color:var(--soft)}label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;margin-top:10px}input{width:100%;padding:9px;border:2px solid #999;margin-top:5px;font-size:12px}.row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.mini{border:1px solid #111;background:#fff;padding:7px 9px;font-size:11px;font-weight:800;cursor:pointer}.mini.open{background:var(--r);border-color:var(--r);color:#fff}.status{font-size:11px;font-weight:800;color:var(--green);min-height:14px;margin-top:5px}.steps{margin:0;padding-left:22px;line-height:1.6}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body><div class="wrap">
+<section class="hero">
+<h1>Classroom 50 · Tareas EF 2026-2027</h1>
+<p>Panel auxiliar para conectar las tareas de Educación Física con Classroom 50 y publicar después el enlace de cada actividad en Google Classroom.</p>
+<div class="actions">
+<a class="btn red" href="https://classroom50.org/?lang=es" target="_blank" rel="noopener">Abrir Classroom 50</a>
+<a class="btn" href="https://classroom.google.com/" target="_blank" rel="noopener">Abrir Google Classroom</a>
+<a class="btn light" href="https://github.com/jorgelanchas22-hue/tareas-ef2627" target="_blank" rel="noopener">Repositorio tareas-ef2627</a>
+</div>
+</section>
+<div class="note"><b>Uso recomendado:</b> Classroom 50 gestiona la creación del repositorio individual y la trazabilidad de la entrega. La evaluación educativa, rúbricas, criterios y evidencias siguen gestionándose en tu app.</div>
+<div class="note warning"><b>Privacidad:</b> no publiques datos personales, sanitarios ni resultados físicos del alumnado en repositorios públicos. Para entregas individuales, configura los repositorios del alumnado como privados dentro de la organización que uses con Classroom 50.</div>
+<section class="hero"><h2>Configuración inicial (una sola vez)</h2><ol class="steps"><li>Entra en Classroom 50 con GitHub y autoriza la organización que vayas a utilizar para el curso.</li><li>Crea las aulas, por ejemplo <b>EF 2.º ESO · 2026-2027</b> y <b>EF 4.º ESO · 2026-2027</b>.</li><li>Usa este repositorio como plantilla pública o crea una plantilla específica por tarea.</li><li>Crea cada Assignment en Classroom 50 y copia su enlace de invitación.</li><li>Pega ese enlace en la ficha correspondiente de abajo. Quedará guardado en este navegador del profesor.</li><li>Desde Google Classroom crea una tarea y adjunta el enlace de invitación.</li></ol></section>
+<div id="courses"></div>
+</div>
+<script>
+const TASKS=[
+{id:'2e-e1-t1',c:'2.º ESO',e:'1.ª evaluación',t:'Nutrición y Vida Activa',u:'../2ºESO/eval1-tarea1-nutricion/'},
+{id:'2e-e1-t2',c:'2.º ESO',e:'1.ª evaluación',t:'CASO DOMS',u:'../2ºESO/eval1-tarea2-doms/'},
+{id:'2e-e2-t1',c:'2.º ESO',e:'2.ª evaluación',t:'MISIÓN 112',u:'../2ºESO/eval2-tarea1-mision-112/'},
+{id:'2e-e2-t2',c:'2.º ESO',e:'2.ª evaluación',t:'JUEGA LIMPIO',u:'../2ºESO/eval2-tarea2-juega-limpio/'},
+{id:'2e-e3-t1',c:'2.º ESO',e:'3.ª evaluación',t:'INVENTA UN DEPORTE',u:'../2ºESO/eval3-tarea1-inventa-deporte/'},
+{id:'2e-e3-t2',c:'2.º ESO',e:'3.ª evaluación',t:'EL PODER DEL CORE',u:'../2ºESO/eval3-tarea2-core/'},
+{id:'4e-e1-t1',c:'4.º ESO',e:'1.ª evaluación',t:'Mitos de la Actividad Física',u:'../4ºESO/eval1-tarea1-mitos/'},
+{id:'4e-e1-t2',c:'4.º ESO',e:'1.ª evaluación',t:'Presión Competitiva',u:'../4ºESO/eval1-tarea2-presion%20dentro/'},
+{id:'4e-e2-t1',c:'4.º ESO',e:'2.ª evaluación',t:'Estrategia Deportiva',u:'../4ºESO/eval2-tarea1-estrategia/'},
+{id:'4e-e2-t2',c:'4.º ESO',e:'2.ª evaluación',t:'Arbitraje Deportivo',u:'../4ºESO/eval2-tarea2-arbitraje/'},
+{id:'4e-e3-t1',c:'4.º ESO',e:'3.ª evaluación',t:'Reto Motriz',u:'../4ºESO/eval3-tarea1-reto-motriz/entrada.html'},
+{id:'4e-e3-t2',c:'4.º ESO',e:'3.ª evaluación',t:'Gymkhana de Orientación',u:'../4ºESO/eval3-tarea1-gymkhana-orientacion/entrada.html'}
+];
+const KEY='ef2627-classroom50-links-v1';let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){saved={}}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function render(){const root=document.getElementById('courses');root.innerHTML=['2.º ESO','4.º ESO'].map(c=>`<section class="course"><h2>${c}</h2>${['1.ª evaluación','2.ª evaluación','3.ª evaluación'].map(e=>`<div class="eval"><h3>${e}</h3><div class="grid">${TASKS.filter(x=>x.c===c&&x.e===e).map(x=>`<article class="task"><h4>${x.t}</h4><small>${x.e}</small><label>Enlace de invitación Classroom 50</label><input id="in-${x.id}" type="url" placeholder="Pega aquí el enlace generado por Classroom 50" value="${esc(saved[x.id]||'')}"><div class="row"><button class="mini" onclick="saveLink('${x.id}')">Guardar enlace</button><button class="mini open" onclick="openInvite('${x.id}')">Abrir invitación</button><a class="mini" href="${x.u}" target="_blank" rel="noopener" style="text-decoration:none;color:#111">Ver tarea</a></div><div class="status" id="st-${x.id}">${saved[x.id]?'✓ Enlace guardado':''}</div></article>`).join('')}</div></div>`).join('')}</section>`).join('')}
+function saveLink(id){const v=document.getElementById('in-'+id).value.trim();saved[id]=v;localStorage.setItem(KEY,JSON.stringify(saved));document.getElementById('st-'+id).textContent=v?'✓ Enlace guardado':'Enlace eliminado'}
+function openInvite(id){const v=document.getElementById('in-'+id).value.trim();if(!v){document.getElementById('st-'+id).textContent='Primero pega y guarda el enlace de Classroom 50';return}window.open(v,'_blank','noopener')}
+render();
+</script></body></html>
