@@ -16,7 +16,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<script src="actividad-ef.js?v=20261004"></script>
+<script src="actividad-ef.js?v=20261004e"></script>
 <script>
 const firebaseConfig={apiKey:'AIzaSyCsPi1YtKxDyeVKTvx2y2z_b48qluqpJAU',authDomain:'tareas-alumnado2y4eso.firebaseapp.com',databaseURL:'https://tareas-alumnado2y4eso-default-rtdb.europe-west1.firebasedatabase.app',projectId:'tareas-alumnado2y4eso'};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();
@@ -57,6 +57,7 @@ gymkhana:{course:'4',ev:3,title:'4.º ESO · Gymkhana de Orientación',url:'4ºE
 function evOpen(ev){const w=WINDOWS[ev],n=new Date(),a=new Date(w.start+'T00:00:00'),b=new Date(w.end+'T23:59:59');return n>=a&&n<=b}
 const p=new URLSearchParams(location.search),k=p.get('t')||'',x=T[k],curso=p.get('curso')||'',grupo=p.get('grupo')||'',alumno=p.get('alumno')||'';
 function deny(msg){document.getElementById('criteria').style.display='none';document.getElementById('frame').style.display='none';const b=document.getElementById('blocked');b.style.display='block';b.innerHTML=`<h2>Acceso bloqueado</h2><p><b>${msg}</b></p><p>Vuelve al panel central e identifícate. Solo se puede trabajar en las tareas de la evaluación activa.</p>`}
+async function openVerifiedTask(){const account=await efAccountReady();if(!efVerifiedAccount(account)){deny('Inicia sesión con Google desde el panel central.');return;}
 if(!x){deny('La tarea solicitada no existe.')}else{
  title.textContent=x.title;document.title=x.title;crit.innerHTML=x.cr.map(c=>`<div class="c"><b>EFI.${c}</b>${C[c]}</div>`).join('');
  studentBar.textContent=alumno&&grupo?`Alumno/a: ${alumno} · ${grupo}`:'Alumno no identificado';
@@ -64,9 +65,19 @@ if(!x){deny('La tarea solicitada no existe.')}else{
  else if(curso!==x.course)deny('Esta tarea no pertenece al curso seleccionado.');
  else if(!evOpen(x.ev))deny(`La ${x.ev}ª evaluación no está abierta en este momento.`);
  else{recordEFActivity({course:curso,group:grupo,name:alumno},k).catch(()=>{studentBar.textContent+=' · No se pudo registrar la apertura para el profesor.'});const q=new URLSearchParams({curso,grupo,alumno});frame.src=x.url+(x.url.includes('?')?'&':'?')+q.toString();
- frame.onload=()=>{try{const d=frame.contentDocument;if(!d)return;const params={grupo,alumno};const g=d.getElementById('studentGroup')||d.getElementById('group');if(g){g.value=grupo;g.dispatchEvent(new Event('change',{bubbles:true}))}setTimeout(()=>{const n=d.getElementById('studentNameSelect')||d.getElementById('name');if(n){const has=[...n.options].some(o=>o.value===alumno||o.textContent===alumno);if(has){n.value=alumno;n.dispatchEvent(new Event('change',{bubbles:true}))}else{const manualOpt=[...n.options].find(o=>o.value==='__manual');if(manualOpt){n.value='__manual';n.dispatchEvent(new Event('change',{bubbles:true}))}const m=d.getElementById('manual')||d.getElementById('studentNameManual')||d.getElementById('nameManual');if(m){m.style.display='block';m.value=alumno;m.dispatchEvent(new Event('change',{bubbles:true}))}}}},700);const w=d.createTreeWalker(d.body,NodeFilter.SHOW_TEXT);let node;while(node=w.nextNode())node.nodeValue=node.nodeValue.replace(/Briefing/g,'Análisis inicial').replace(/briefing/g,'análisis inicial')}catch(e){}};
+ frame.onload=()=>{try{attachInteractionTracking(frame);const d=frame.contentDocument;if(!d)return;const params={grupo,alumno};const g=d.getElementById('studentGroup')||d.getElementById('group');if(g){g.value=grupo;g.dispatchEvent(new Event('change',{bubbles:true}));g.disabled=true}setTimeout(()=>{const n=d.getElementById('studentNameSelect')||d.getElementById('name');if(n){const has=[...n.options].some(o=>o.value===alumno||o.textContent===alumno);if(has){n.value=alumno;n.dispatchEvent(new Event('change',{bubbles:true}))}else{const manualOpt=[...n.options].find(o=>o.value==='__manual');if(manualOpt){n.value='__manual';n.dispatchEvent(new Event('change',{bubbles:true}))}const m=d.getElementById('manual')||d.getElementById('studentNameManual')||d.getElementById('nameManual');if(m){m.style.display='block';m.value=alumno;m.dispatchEvent(new Event('change',{bubbles:true}))}}}},700);const w=d.createTreeWalker(d.body,NodeFilter.SHOW_TEXT);let node;while(node=w.nextNode())node.nodeValue=node.nodeValue.replace(/Briefing/g,'Análisis inicial').replace(/briefing/g,'análisis inicial')}catch(e){}};
  }
 }
+}
+function attachInteractionTracking(target){
+ const d=target.contentDocument;if(!d||d.__efTracked)return;d.__efTracked=true;let pending=false,lastSent=0;
+ const send=()=>{if(!pending)return;pending=false;lastSent=Date.now();recordEFActivity({course:curso,group:grupo,name:alumno},k,true).catch(()=>{studentBar.textContent='No se pudo registrar la interacción. Comprueba la conexión.'})};
+ const ignore=/^(group|name|manual|studentGroup|studentNameSelect|studentNameManual|nameManual|role)$/;
+ const change=e=>{if(!e.isTrusted||!e.target.matches('textarea,input,select')||ignore.test(e.target.id)||e.target.type==='password')return;pending=true;if(Date.now()-lastSent>=10000)send();else if(!d.__efTimer)d.__efTimer=setTimeout(()=>{d.__efTimer=null;send()},10000)};
+ d.addEventListener('input',change,true);d.addEventListener('change',change,true);
+ d.querySelectorAll('iframe').forEach(child=>{child.addEventListener('load',()=>{try{attachInteractionTracking(child)}catch(e){}});try{attachInteractionTracking(child)}catch(e){}});
+}
+openVerifiedTask().catch(()=>deny('No se pudo verificar la sesión. Vuelve al panel central.'));
 </script>
 </body>
 </html>
