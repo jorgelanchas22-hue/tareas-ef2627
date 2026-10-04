@@ -13,7 +13,14 @@
 <section id="criteria" class="criteria"><div class="head">Criterios de evaluación · Qualitas Educativa</div><div class="sub">Estos son los criterios con los que se evaluará esta tarea.</div><div class="grid" id="crit"></div></section>
 <div id="blocked" class="blocked" style="display:none"></div>
 <iframe id="frame" class="frame" title="Actividad"></iframe>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="actividad-ef.js?v=20261004"></script>
 <script>
+const firebaseConfig={apiKey:'AIzaSyCsPi1YtKxDyeVKTvx2y2z_b48qluqpJAU',authDomain:'tareas-alumnado2y4eso.firebaseapp.com',databaseURL:'https://tareas-alumnado2y4eso-default-rtdb.europe-west1.firebasedatabase.app',projectId:'tareas-alumnado2y4eso'};
+firebase.initializeApp(firebaseConfig);const db=firebase.database();
+
 const WINDOWS={1:{start:'2026-09-15',end:'2026-12-01'},2:{start:'2026-12-15',end:'2027-03-03'},3:{start:'2027-03-15',end:'2027-06-01'}};
 const C={
 '2.1.2':'Incorporar hábitos relacionados con procesos de activación corporal, dosificación del esfuerzo, alimentación saludable, educación postural, respiración, relajación, seguridad e higiene durante la práctica de actividades motrices, interiorizando las rutinas propias de una práctica motriz saludable y responsable.',
@@ -56,7 +63,7 @@ if(!x){deny('La tarea solicitada no existe.')}else{
  if(!curso||!grupo||!alumno)deny('Falta la identificación del alumno.');
  else if(curso!==x.course)deny('Esta tarea no pertenece al curso seleccionado.');
  else if(!evOpen(x.ev))deny(`La ${x.ev}ª evaluación no está abierta en este momento.`);
- else{const q=new URLSearchParams({curso,grupo,alumno});frame.src=x.url+(x.url.includes('?')?'&':'?')+q.toString();
+ else{recordEFActivity({course:curso,group:grupo,name:alumno},k).catch(()=>{studentBar.textContent+=' · No se pudo registrar la apertura para el profesor.'});const q=new URLSearchParams({curso,grupo,alumno});frame.src=x.url+(x.url.includes('?')?'&':'?')+q.toString();
  frame.onload=()=>{try{const d=frame.contentDocument;if(!d)return;const params={grupo,alumno};const g=d.getElementById('studentGroup')||d.getElementById('group');if(g){g.value=grupo;g.dispatchEvent(new Event('change',{bubbles:true}))}setTimeout(()=>{const n=d.getElementById('studentNameSelect')||d.getElementById('name');if(n){const has=[...n.options].some(o=>o.value===alumno||o.textContent===alumno);if(has){n.value=alumno;n.dispatchEvent(new Event('change',{bubbles:true}))}else{const manualOpt=[...n.options].find(o=>o.value==='__manual');if(manualOpt){n.value='__manual';n.dispatchEvent(new Event('change',{bubbles:true}))}const m=d.getElementById('manual')||d.getElementById('studentNameManual')||d.getElementById('nameManual');if(m){m.style.display='block';m.value=alumno;m.dispatchEvent(new Event('change',{bubbles:true}))}}}},700);const w=d.createTreeWalker(d.body,NodeFilter.SHOW_TEXT);let node;while(node=w.nextNode())node.nodeValue=node.nodeValue.replace(/Briefing/g,'Análisis inicial').replace(/briefing/g,'análisis inicial')}catch(e){}};
  }
 }
