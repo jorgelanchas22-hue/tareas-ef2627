@@ -23,6 +23,7 @@ firebase.initializeApp(firebaseConfig);const db=firebase.database();
 
 const WINDOWS={1:{start:'2026-09-15',end:'2026-12-01'},2:{start:'2026-12-15',end:'2027-03-03'},3:{start:'2027-03-15',end:'2027-06-01'}};
 const C={
+'4.1.1':'Planificar y autorregular la actividad física para la salud mediante sistemas de entrenamiento, herramientas de autoevaluación y seguimiento, adaptándola a las necesidades individuales. Resumen del criterio oficial.',
 '2.1.2':'Incorporar hábitos relacionados con procesos de activación corporal, dosificación del esfuerzo, alimentación saludable, educación postural, respiración, relajación, seguridad e higiene durante la práctica de actividades motrices, interiorizando las rutinas propias de una práctica motriz saludable y responsable.',
 '2.1.3':'Identificar y adoptar de manera responsable y autónoma medidas generales para la prevención de lesiones antes, durante y después de la práctica de actividad física, en diferentes contextos y situaciones motrices, aprendiendo a reconocer situaciones de riesgo para actuar preventivamente.',
 '2.1.4':'Identificar y actuar ante situaciones relacionadas con accidentes derivados de la práctica de actividad física de acuerdo a los protocolos de intervención, aplicando medidas básicas de primeros auxilios en diferentes contextos y ante diferentes tipos de lesiones.',
@@ -42,6 +43,7 @@ const C={
 '4.3.3':'Relacionarse y entenderse con el resto de participantes durante el desarrollo de diversas prácticas motrices con autonomía y haciendo uso efectivo de habilidades sociales y de diálogo en la resolución de conflictos y respeto ante la diversidad, posicionándose activamente frente a estereotipos, discriminación y violencia.',
 '4.5.2':'Diseñar y organizar actividades físico-deportivas en el medio natural y urbano andaluz, asumiendo responsabilidades y aplicando normas de seguridad individuales y colectivas con autonomía.'};
 const T={
+plan:{course:'4',ev:1,title:'4.º ESO · Mi plan de entrenamiento',url:'4ºESO/plan-entrenamiento/',cr:['4.1.1','4.1.2','4.2.1']},
 nutricion:{course:'2',ev:1,title:'2.º ESO · Nutrición y Vida Activa',url:'2ºESO/eval1-tarea1-nutricion/',cr:['2.1.2','2.1.5']},
 doms:{course:'2',ev:1,title:'2.º ESO · CASO DOMS',url:'2ºESO/eval1-tarea2-doms/',cr:['2.1.2','2.1.3']},
 mision112:{course:'2',ev:2,title:'2.º ESO · MISIÓN 112',url:'2ºESO/eval2-tarea1-mision-112/',cr:['2.1.3','2.1.4']},
@@ -81,3 +83,4 @@ openVerifiedTask().catch(()=>deny('No se pudo verificar la sesión. Vuelve al pa
 </script>
 </body>
 </html>
+
