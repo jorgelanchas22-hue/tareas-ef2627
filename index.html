@@ -18,7 +18,7 @@
   </div>
 
   <section class="identity">
-    <h2>Acceso del alumno</h2>
+    <h2>Acceso del alumno</h2><p><button id="googleStudent" class="btn" type="button">Entrar con Google</button> <button id="studentSignOut" type="button" hidden>Cerrar sesión</button></p><p id="studentAccount" role="status">Inicia sesión con Google. El profesor verá la cuenta utilizada junto al nombre seleccionado.</p>
     <p>Selecciona curso, grupo y nombre. El sistema solo permitirá abrir las tareas de la evaluación que corresponda por fecha.</p>
     <div class="idgrid">
       <div class="field"><label>Curso</label><select id="course"><option value="">Selecciona</option><option value="2">2.º ESO</option><option value="4">4.º ESO</option></select></div>
@@ -38,7 +38,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<script src="actividad-ef.js?v=20261004"></script>
+<script src="actividad-ef.js?v=20261004e"></script>
 <script>
 const firebaseConfig={apiKey:'AIzaSyCsPi1YtKxDyeVKTvx2y2z_b48qluqpJAU',authDomain:'tareas-alumnado2y4eso.firebaseapp.com',databaseURL:'https://tareas-alumnado2y4eso-default-rtdb.europe-west1.firebasedatabase.app',projectId:'tareas-alumnado2y4eso'};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();
@@ -62,7 +62,7 @@ const TASKS=[
 {curso:'4',ev:3,slot:1,titulo:'Reto Motriz',descripcion:'Análisis inicial → diseño → prueba → validación → rediseño V2.',cr:'EFI.4.2.1 · EFI.4.2.3',id:'reto'},
 {curso:'4',ev:3,slot:2,titulo:'Gymkhana de Orientación',descripcion:'Análisis inicial → diseño → validación de recorrido, flujo y seguridad.',cr:'EFI.4.5.2 · EFI.4.2.1',id:'gymkhana'}
 ];
-let identity=null;
+let identity=null,verifiedStudent=null;
 const C=document.getElementById('course'),G=document.getElementById('group'),S=document.getElementById('student'),M=document.getElementById('manual'),STATUS=document.getElementById('idStatus');
 function state(ev){const w=WINDOWS[ev],n=new Date(),a=new Date(w.start+'T00:00:00'),b=new Date(w.end+'T23:59:59');if(n<a)return{cls:'future',txt:'Aún no abierta',canOpen:false};if(n>b)return{cls:'closed',txt:'Plazo cerrado',canOpen:false};return{cls:'open',txt:'● Evaluación activa',canOpen:true}}
 function activeEvaluation(){for(const ev of [1,2,3])if(state(ev).canOpen)return ev;return null}
@@ -72,18 +72,22 @@ function setGroups(){const gs=groupsFor(C.value);G.disabled=!gs.length;G.innerHT
 async function ensureAnon(){if(firebase.auth().currentUser)return;await firebase.auth().signInAnonymously()}
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function fillStudents(){resetNames();if(!G.value)return;const requestedGroup=G.value;S.disabled=true;S.innerHTML='<option value="">Cargando alumnos…</option>';try{await ensureAnon();const snap=await db.ref('listas_grupos/'+requestedGroup).once('value');if(G.value!==requestedGroup)return;const v=snap.val()||[],a=Array.isArray(v)?v:Object.values(v).filter(x=>typeof x==='string');S.disabled=false;S.innerHTML='<option value="">Selecciona tu nombre</option>'+a.map(n=>`<option>${escapeHTML(n)}</option>`).join('')+'<option value="__manual">Mi nombre no aparece</option>'}catch(e){if(G.value!==requestedGroup)return;S.disabled=true;S.innerHTML='<option value="">Lista no disponible</option>';STATUS.className='status';STATUS.innerHTML='<b>No se pudo conectar con el registro.</b> Inténtalo de nuevo y avisa al profesor si persiste.'}}
-function identify(name){name=(name||'').trim();if(!C.value||!G.value||!name){identity=null;localStorage.removeItem(IDKEY);pendingIdentity();renderAll();return;}identity={course:C.value,group:G.value,name};localStorage.setItem(IDKEY,JSON.stringify(identity));STATUS.className='status ok';STATUS.innerHTML=`<b>✓ ${escapeHTML(name)}</b> · ${escapeHTML(G.value)} · ${escapeHTML(C.value)}.º ESO<br>Solo podrás abrir las tareas de la evaluación activa.`;renderAll();recordAccess(identity)}
+function identify(name){if(!efVerifiedAccount(verifiedStudent)){pendingIdentity();return;}name=(name||'').trim();if(!C.value||!G.value||!name){identity=null;localStorage.removeItem(IDKEY);pendingIdentity();renderAll();return;}identity={course:C.value,group:G.value,name,accountUid:verifiedStudent.uid};localStorage.setItem(IDKEY,JSON.stringify(identity));STATUS.className='status ok';STATUS.innerHTML=`<b>✓ ${escapeHTML(name)}</b> · ${escapeHTML(G.value)} · ${escapeHTML(C.value)}.º ESO<br>Solo podrás abrir las tareas de la evaluación activa.`;renderAll();recordAccess(identity)}
 function pendingIdentity(){STATUS.className='status';STATUS.textContent='Identificación pendiente. Selecciona curso, grupo y nombre.'}
 C.onchange=()=>{pendingIdentity();identity=null;localStorage.removeItem(IDKEY);setGroups();renderAll()};
 G.onchange=async()=>{pendingIdentity();identity=null;localStorage.removeItem(IDKEY);await fillStudents();renderAll()};
 S.onchange=()=>{pendingIdentity();identity=null;localStorage.removeItem(IDKEY);renderAll();if(S.value==='__manual'){M.style.display='block';M.focus();return}M.style.display='none';if(S.value)identify(S.value)};
 M.onchange=()=>identify(M.value);
-function linkFor(t,st){if(!identity)return'<span class="locked">Identifícate arriba para abrir la tarea.</span>';if(identity.course!==t.curso)return'<span class="locked">Tarea de otro curso.</span>';if(!st.canOpen)return`<span class="locked">${st.txt}</span>`;const q=new URLSearchParams({t:t.id,curso:identity.course,grupo:identity.group,alumno:identity.name});return`<a class="btn" href="ver-tarea.html?${q.toString()}">Abrir tarea →</a>`}
+function linkFor(t,st){if(!efVerifiedAccount(verifiedStudent)||!identity)return'<span class="locked">Identifícate arriba para abrir la tarea.</span>';if(identity.course!==t.curso)return'<span class="locked">Tarea de otro curso.</span>';if(!st.canOpen)return`<span class="locked">${st.txt}</span>`;const q=new URLSearchParams({t:t.id,curso:identity.course,grupo:identity.group,alumno:identity.name});return`<a class="btn" href="ver-tarea.html?${q.toString()}">Abrir tarea →</a>`}
 function renderCourse(course,target){const root=document.getElementById(target);root.innerHTML='';[1,2,3].forEach(ev=>{const st=state(ev),w=WINDOWS[ev],tasks=TASKS.filter(t=>t.curso===course&&t.ev===ev);const block=document.createElement('div');block.className='eval';block.innerHTML=`<div class="evalhead"><div><h3>${ev}ª Evaluación</h3><div class="dates">${w.label}</div></div><span class="badge ${st.cls}">${st.txt}</span></div><div class="cards">${tasks.map(t=>`<div class="card"><div><b>Tarea ${t.slot}</b></div><h4>${t.titulo}</h4><p>${t.descripcion}</p><div class="crit">${t.cr}</div>${linkFor(t,st)}</div>`).join('')}</div>`;root.appendChild(block)})}
 function renderAll(){renderCourse('2','course2');renderCourse('4','course4');document.getElementById('box2').classList.toggle('inactive',!!identity&&identity.course!=='2');document.getElementById('box4').classList.toggle('inactive',!!identity&&identity.course!=='4');const ev=activeEvaluation();document.getElementById('notice').innerHTML=ev?`<span class="currentEval">Ahora está activa la ${ev}ª evaluación.</span> Las tareas de las demás evaluaciones permanecen bloqueadas aunque se conozca su enlace.`:'<b>No hay ninguna evaluación abierta en este momento.</b> Todas las tareas del alumnado están bloqueadas hasta el siguiente periodo.'}
-async function restore(){try{const x=JSON.parse(localStorage.getItem(IDKEY)||'null');if(!x||!x.course||!x.group||!x.name){renderAll();return}identity=x;C.value=x.course;setGroups();G.value=x.group;await fillStudents();const hasOption=[...S.options].some(o=>o.value===x.name||o.textContent===x.name);if(hasOption){S.value=x.name;M.style.display='none';M.value=''}else{S.value='__manual';M.style.display='block';M.value=x.name}STATUS.className='status ok';STATUS.innerHTML=`<b>✓ ${escapeHTML(x.name)}</b> · ${escapeHTML(x.group)} · ${escapeHTML(x.course)}.º ESO<br>Solo podrás abrir las tareas de la evaluación activa.`;renderAll();recordAccess(identity)}catch(e){renderAll()}}
+async function restore(){try{const x=JSON.parse(localStorage.getItem(IDKEY)||'null');if(!x||!x.course||!x.group||!x.name||x.accountUid!==verifiedStudent?.uid){localStorage.removeItem(IDKEY);setGroups();renderAll();return}identity=x;C.value=x.course;setGroups();G.value=x.group;await fillStudents();const hasOption=[...S.options].some(o=>o.value===x.name||o.textContent===x.name);if(hasOption){S.value=x.name;M.style.display='none';M.value=''}else{S.value='__manual';M.style.display='block';M.value=x.name}STATUS.className='status ok';STATUS.innerHTML=`<b>✓ ${escapeHTML(x.name)}</b> · ${escapeHTML(x.group)} · ${escapeHTML(x.course)}.º ESO<br>Solo podrás abrir las tareas de la evaluación activa.`;renderAll();recordAccess(identity)}catch(e){renderAll()}}
 function recordAccess(who){recordEFActivity({...who}).catch(()=>{if(identity&&identity.name===who.name&&identity.group===who.group){STATUS.className='status';STATUS.textContent='Identificación guardada en este dispositivo, pero no se pudo registrar el acceso para el profesor. Comprueba la conexión y vuelve a entrar.'}})}
-restore();
+const studentLogin=document.getElementById('googleStudent'),studentOut=document.getElementById('studentSignOut'),accountLabel=document.getElementById('studentAccount');
+studentLogin.onclick=async()=>{try{const provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});await efAccountApp().auth().signInWithPopup(provider)}catch(e){accountLabel.textContent='No se pudo iniciar sesión con Google. Inténtalo de nuevo. Código: '+(e.code||'desconocido')}};
+studentOut.onclick=()=>efAccountApp().auth().signOut();
+efAccountApp().auth().onAuthStateChanged(async user=>{verifiedStudent=efVerifiedAccount(user)?user:null;identity=null;studentOut.hidden=!verifiedStudent;studentLogin.hidden=!!verifiedStudent;C.disabled=!verifiedStudent;
+ if(verifiedStudent){accountLabel.textContent='Cuenta Google: '+verifiedStudent.email+' · Selecciona tu grupo y tu nombre de la lista.';await restore()}else{G.disabled=true;S.disabled=true;M.disabled=true;accountLabel.textContent='Inicia sesión con Google para acceder. El profesor verá la cuenta utilizada.';pendingIdentity();renderAll()}M.disabled=!verifiedStudent;});
 </script>
 </body>
 </html>
