@@ -60,6 +60,9 @@ function evOpen(ev){const w=WINDOWS[ev],n=new Date(),a=new Date(w.start+'T00:00:
 const p=new URLSearchParams(location.search),k=p.get('t')||'',x=T[k],curso=p.get('curso')||'',grupo=p.get('grupo')||'',alumno=p.get('alumno')||'';
 function deny(msg){document.getElementById('criteria').style.display='none';document.getElementById('frame').style.display='none';const b=document.getElementById('blocked');b.style.display='block';b.innerHTML=`<h2>Acceso bloqueado</h2><p><b>${msg}</b></p><p>Vuelve al panel central e identifícate. Solo se puede trabajar en las tareas de la evaluación activa.</p>`}
 async function openVerifiedTask(){const account=await efAccountReady();if(!efVerifiedAccount(account)){deny('Inicia sesión con Google desde el panel central.');return;}
+// La URL no es una prueba de identidad: exigimos una selección previa asociada a la cuenta actual.
+let seleccion=null;try{seleccion=JSON.parse(localStorage.getItem('ef_student_identity_2026_2027')||'null')}catch(e){}
+if(!seleccion || seleccion.accountUid!==account.uid || seleccion.course!==curso || seleccion.group!==grupo || seleccion.name!==alumno){deny('La identificación no coincide con la sesión del panel central. Regresa al panel y selecciona tu nombre.');return;}
 if(!x){deny('La tarea solicitada no existe.')}else{
  title.textContent=x.title;document.title=x.title;crit.innerHTML=x.cr.map(c=>`<div class="c"><b>EFI.${c}</b>${C[c]}</div>`).join('');
  studentBar.textContent=alumno&&grupo?`Alumno/a: ${alumno} · ${grupo}`:'Alumno no identificado';
