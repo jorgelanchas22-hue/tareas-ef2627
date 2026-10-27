@@ -127,6 +127,9 @@
     ? '<span style="color:#999">—</span>'
     : `<b style="color:${n >= 5 ? 'var(--green,#137a4a)' : 'var(--r,#dc0614)'}">${n}</b>`;
 
+  const LOGIN_BTN  = '<button class="btn" onclick="conectarRetosEF()">🔐 Conectar con Retos EF</button>';
+  const LOGIN_LINK = '<a href="#" onclick="conectarRetosEF();return false" style="font-weight:700;color:#dc0614">Conectar Retos</a>';
+
   /* ---------- estilos ---------- */
   const st = document.createElement('style');
   st.textContent = `
@@ -205,7 +208,11 @@
 
   function renderPanel(){
     if(!$('retosPanel') || !$('retosPanel').classList.contains('on')) return;
-    if(!R.ready){ $('rxMsg').textContent = R.error || 'Cargando datos de Retos EF…'; $('rxBody').innerHTML = ''; return; }
+    if(!R.ready){
+      if(R.error === 'NEED_LOGIN') $('rxMsg').innerHTML = 'Para ver los retos, conecta una vez tu cuenta del colegio con Retos EF (se queda recordado): ' + LOGIN_BTN;
+      else $('rxMsg').textContent = R.error || 'Cargando datos de Retos EF…';
+      $('rxBody').innerHTML = ''; $('rxSummary').innerHTML = ''; return;
+    }
     const g = $('rxGroup').value;
     if($('group').value !== g){
       // Sincroniza con la lista de clase del panel de tareas
@@ -265,7 +272,7 @@
       const first = tr.querySelector('td.student'); if(!first) return;
       let td = tr.querySelector('td.rx-cell');
       if(!td){ td = document.createElement('td'); td.className = 'rx-cell'; tr.appendChild(td); }
-      if(!R.ready){ td.innerHTML = '<span style="color:#999">…</span>'; return; }
+      if(!R.ready){ td.innerHTML = R.error === 'NEED_LOGIN' ? LOGIN_LINK : '<span style="color:#999">…</span>'; return; }
       const a = findAlumno(g, first.textContent.trim());
       td.innerHTML = [1,2,3].map(t => {
         const r = resumen(a, t);
@@ -289,7 +296,7 @@
       if(tr.children.length < 2) return;
       let td = tr.querySelector('td.rx-cell');
       if(!td){ td = document.createElement('td'); td.className = 'rx-cell'; tr.appendChild(td); }
-      if(!R.ready){ td.innerHTML = '<span style="color:#999">…</span>'; return; }
+      if(!R.ready){ td.innerHTML = R.error === 'NEED_LOGIN' ? LOGIN_LINK : '<span style="color:#999">…</span>'; return; }
       const a = findAlumno(g, tr.children[0].textContent.trim());
       if(!a){ td.innerHTML = '<span style="color:#777">No ha entrado</span>'; return; }
       const t = R.trimestreActivo, r = resumen(a, t), u = ultimaActividad(a);
@@ -333,7 +340,38 @@
       const mod = await loadRetosCode();
       R.RETOS = mod.RETOS; R.calc = mod.calcularNotaAlumno;
       const app = firebase.apps.find(x => x.name === 'retos') || firebase.initializeApp(mod.cfg, 'retos');
-      await app.auth().signInAnonymously();
+      R.app = app;
+      const user = await new Promise(res => { const off = app.auth().onAuthStateChanged(u => { off(); res(u); }); });
+      if(!user || user.isAnonymous){
+        if(user) await app.auth().signOut();
+        R.error = 'NEED_LOGIN'; refreshAll();
+        return;
+      }
+      await subscribe(app);
+    }catch(e){
+      console.error('[Retos EF]', e);
+      R.error = 'No se pudo conectar con Retos EF: ' + (e && e.message || e);
+      refreshAll();
+    }
+  }
+
+  /* Inicio de sesión con Google en el proyecto de Retos EF (solo la 1.ª vez; luego se recuerda) */
+  async function connectRetos(){
+    if(!R.app) return;
+    try{
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({prompt:'select_account', login_hint:'jorge.lanchas@triana.salesianos.edu'});
+      await R.app.auth().signInWithPopup(provider);
+      R.error = ''; refreshAll();
+      await subscribe(R.app);
+    }catch(e){
+      R.error = 'No se pudo iniciar sesión en Retos EF: ' + (e && e.message || e); refreshAll();
+    }
+  }
+  window.conectarRetosEF = connectRetos;
+
+  async function subscribe(app){
+    try{
       const db2 = app.database();
       const [rub, tri] = await Promise.all([
         db2.ref('retosEF/config/rubrica').once('value').then(s => s.val()).catch(() => null),
