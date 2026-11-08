@@ -11,3 +11,17 @@ window.recordEFActivity=async function(identity,task,interaction=false){
  if(task)patch['tareas/'+task+(interaction?'/ultimaInteraccion':'/ultimaApertura')]=stamp;
  await ref.update(patch);
 };
+// Presencia en directo: marca al alumno como conectado mientras tiene una tarea abierta.
+// Se borra sola al cerrar la pestaña o perder la conexión (onDisconnect) y se refresca cada 60 s.
+window.startEFPresence=async function(identity,task,title){
+ const user=await efAccountReady();if(!efVerifiedAccount(user)||!identity||!identity.group||!identity.name)return {interaction(){}};
+ const name=identity.name.trim(),key=Array.from(new TextEncoder().encode(name)).map(b=>b.toString(16).padStart(2,'0')).join('');
+ const db=efAccountApp().database(),ref=db.ref('presencia_ef/2026-2027/'+identity.group+'/'+key),TS=firebase.database.ServerValue.TIMESTAMP;
+ const base=()=>({nombre:name,grupo:identity.group,curso:identity.course,tarea:task||'',titulo:title||task||'',cuentaEmail:user.email,visible:document.visibilityState==='visible',latido:TS});
+ db.ref('.info/connected').on('value',s=>{if(s.val()!==true)return;ref.onDisconnect().remove().then(()=>ref.update({...base(),desde:TS})).catch(()=>{})});
+ const beat=()=>ref.update(base()).catch(()=>{});
+ setInterval(beat,60000);
+ document.addEventListener('visibilitychange',beat);
+ window.addEventListener('pagehide',()=>{ref.remove().catch(()=>{})});
+ return {interaction(){ref.update({...base(),interaccion:TS}).catch(()=>{})}};
+};
